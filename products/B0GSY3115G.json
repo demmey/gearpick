@@ -1,6 +1,6 @@
 {
   "asin": "B0GSY3115G",
-  "scraped_at": "2026-05-25T11:11:01.191542",
+  "scraped_at": "2026-05-25T11:17:30.505650",
   "title": "FNIRSI HS-01 Digital Soldering Iron Kit, DC/PD 96W/65W Fast Heating, 180-780℉ Adjustable Temperature, OLED Digital Display, Auto Sleep Function, 6 Soldering Tips, for Precision Electronics Repair",
   "price": "$59.99",
   "rating": "5.0",
@@ -22,12 +22,12 @@
   "reviews": [],
   "brand": "FNIRSI",
   "category_path": "Tools & Home Improvement › Welding & Soldering › Soldering & Brazing Equipment › Soldering Guns & Irons",
-  "affiliate_url": "https://www.amazon.com/dp/B0GSY3115G?tag=techradar069-20",
-  "affiliate_tag": "techradar069-20",
+  "affiliate_url": "https://www.amazon.com/dp/B0GSY3115G?tag=https://amzn.to/3PACj4j",
+  "affiliate_tag": "https://amzn.to/3PACj4j",
   "niche": "tech",
-  "budget": "mid",
-  "short_desc": "budget Microsoldering Tool",
-  "why_pick": "Easy to use and it works great",
+  "budget": "budget",
+  "short_desc": "Replace C245 Tip",
+  "why_pick": "Compatible with JBC Station, Fast Heating for 3D Printing",
   "emoji": "💻",
   "slug": "fnirsi-hs-01-digital-soldering-iron-kit-dc-pd-96w-65w-fast-h"
 }
