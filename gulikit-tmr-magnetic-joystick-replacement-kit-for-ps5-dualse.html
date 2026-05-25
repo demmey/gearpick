@@ -6,10 +6,10 @@
 <title>GuliKit TMR Magnetic Joystick Replacement Kit for PS5 DualSense/DualSense Edge Controller,Anti-Drift Electromagnetic Stick Repair Module with Thumbstick Caps, Soldering Required — GearPick</title>
 <meta name="description" content="Anti stickdrift (TMR) joysticks">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--ink:#0a0a08;--paper:#f5f2eb;--cream:#ede9df;--rule:#d4cfc4;--muted:#8a8578;--niche:#0070a0;--sans:'Syne',sans-serif;--serif:'Lora',serif;--mono:'IBM Plex Mono',monospace}
+:root{--ink:#0a0a08;--paper:#f5f2eb;--cream:#ede9df;--rule:#d4cfc4;--muted:#8a8578;--niche:#0070a0;--sans:'Inter',system-ui,sans-serif;--serif:Georgia,serif;--mono:'IBM Plex Mono',monospace}
 body{background:var(--paper);color:var(--ink);font-family:var(--sans);overflow-x:hidden}
 a{color:inherit;text-decoration:none}
 nav{position:fixed;top:0;left:0;right:0;z-index:200;background:var(--ink);display:flex;align-items:center;justify-content:space-between;padding:0 2.5rem;height:52px;border-bottom:1px solid #1a1a1a}
@@ -57,7 +57,47 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:var(--ink);displa
 footer{background:var(--ink);padding:2.5rem 4rem;display:flex;align-items:center;justify-content:space-between}
 .footer-logo{font-family:var(--serif);font-size:1.2rem;font-style:italic;color:#fff}.footer-logo strong{font-style:normal}
 .footer-copy{font-family:var(--mono);font-size:0.62rem;color:#444;letter-spacing:0.06em}
-@media(max-width:900px){.hero-product{grid-template-columns:1fr}.img-col{position:relative;height:auto;padding:2rem}.info-col{padding:2rem}.reviews-section,.related-section{padding:3rem 1.5rem}footer{flex-direction:column;gap:1rem;padding:2rem 1.5rem}}
+
+/* Modern detail-page polish */
+:root{--ink:#111827;--paper:#f6f8fb;--cream:#ffffff;--rule:#d8e0ea;--muted:#667085;--accent:#0ea5e9;--accent-dark:#0369a1;--accent-soft:#e0f2fe;--panel:#ffffff;--shadow:0 24px 60px rgba(15,23,42,0.10)}
+body{background:linear-gradient(180deg,#f8fbff 0%,#eef4f8 100%);color:var(--ink);font-family:var(--sans)}
+a:focus-visible,button:focus-visible,.thumb:focus-visible{outline:3px solid rgba(14,165,233,0.35);outline-offset:3px}
+nav{height:64px;padding:0 clamp(1rem,4vw,3rem);background:rgba(255,255,255,0.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--rule);box-shadow:0 10px 30px rgba(15,23,42,0.06)}
+.nav-logo{font-family:var(--sans);font-style:normal;font-size:1.05rem;font-weight:800;color:var(--ink);letter-spacing:-0.01em}.nav-logo strong{color:var(--accent-dark)}
+.nav-back{color:var(--muted);font-weight:700}.nav-back:hover{color:var(--accent-dark)}
+.hero-product{margin:0 auto;padding:clamp(1rem,3vw,2rem);max-width:1320px;display:grid;grid-template-columns:minmax(460px,0.98fr) minmax(420px,0.82fr);gap:clamp(1rem,2.5vw,1.75rem);align-items:start;min-height:auto;border-bottom:0}
+.img-col{position:sticky;top:88px;height:auto;max-height:calc(100vh - 108px);background:linear-gradient(180deg,#ffffff 0%,#f2f6fb 100%);border:1px solid var(--rule);border-radius:8px;padding:clamp(0.85rem,1.6vw,1.25rem);box-shadow:0 18px 44px rgba(15,23,42,0.08);gap:0.85rem}
+.main-img-wrap{min-height:0;aspect-ratio:1 / 1;background:#fff;border:1px solid var(--rule);border-radius:8px;padding:clamp(0.75rem,1.5vw,1.25rem)}
+.main-img{filter:drop-shadow(0 18px 28px rgba(15,23,42,0.10))}
+.thumbs{gap:0.65rem}
+.thumb{width:70px;height:70px;background:#fff;border:1px solid var(--rule);border-radius:8px;box-shadow:0 6px 14px rgba(15,23,42,0.06)}.thumb:hover{border-color:#93c5fd;transform:translateY(-1px)}.thumb.active{border-color:var(--accent);box-shadow:0 0 0 3px rgba(14,165,233,0.18)}
+.info-col{align-self:start;background:var(--panel);border:1px solid var(--rule);border-radius:8px;padding:clamp(1.25rem,2.2vw,2rem);box-shadow:0 18px 44px rgba(15,23,42,0.08);gap:1rem;overflow:visible}
+.product-niche{display:inline-flex;align-items:center;width:max-content;max-width:100%;background:var(--accent-soft);border:1px solid #bae6fd;border-radius:999px;padding:0.42rem 0.7rem;font-family:var(--mono);font-size:0.66rem;font-weight:700;letter-spacing:0.12em;color:var(--accent-dark);line-height:1.2;white-space:normal}
+.product-title{font-family:var(--sans);font-size:clamp(1.65rem,2.05vw,2.35rem);font-weight:850;line-height:1.08;letter-spacing:0;margin-top:0.85rem;text-wrap:balance;overflow-wrap:anywhere}
+.product-brand{margin-top:0.65rem;color:var(--muted)}
+.product-rating{background:#f8fafc;border:1px solid var(--rule);border-radius:8px;padding:0.72rem 0.85rem;justify-content:space-between;flex-wrap:wrap}
+.stars{color:#f59e0b}.rating-num{color:var(--ink)}.review-count{color:var(--muted)}
+.product-price{font-family:var(--sans);font-size:clamp(1.65rem,2.3vw,2.1rem);font-weight:850;color:#0f172a}
+.why-box{background:linear-gradient(180deg,#eff8ff 0%,#ffffff 100%);border:1px solid #bae6fd;border-left:4px solid var(--accent);border-radius:8px;box-shadow:0 10px 22px rgba(14,165,233,0.08)}
+.why-label{color:var(--accent-dark);font-weight:700}
+.why-text{font-family:var(--sans);font-style:normal;font-size:0.98rem;color:#263241}
+.buy-btn{position:sticky;top:78px;z-index:5;border-radius:8px;background:linear-gradient(135deg,#0f172a 0%,#0369a1 100%);box-shadow:0 18px 34px rgba(3,105,161,0.22)}.buy-btn:hover{background:linear-gradient(135deg,#111827 0%,#075985 100%);transform:translateY(-2px);box-shadow:0 22px 40px rgba(3,105,161,0.28)}
+.buy-btn-sub{color:#c7d2fe}
+.bullets-section{background:#fff;border:1px solid var(--rule);border-radius:8px;padding:1.2rem;box-shadow:0 12px 28px rgba(15,23,42,0.05)}
+.bullets-section h3{display:flex;align-items:center;gap:0.6rem;margin-bottom:0.95rem;color:#0f172a;font-size:0.72rem;letter-spacing:0.12em}
+.bullets-section h3::after{content:"";height:1px;background:var(--rule);flex:1}
+.bullets-list{display:grid;grid-template-columns:1fr;gap:0.75rem;list-style:none}
+.spec-card{display:grid;grid-template-columns:auto 1fr;gap:0.8rem;align-items:start;background:#f8fafc;border:1px solid #e3e9f2;border-radius:8px;padding:0.9rem;line-height:1.45}
+.spec-card::before{content:none}
+.spec-index{display:grid;place-items:center;width:2rem;height:2rem;border-radius:8px;background:#e0f2fe;color:#0369a1;font-family:var(--mono);font-size:0.72rem;font-weight:700;letter-spacing:0}
+.spec-card strong{display:block;color:#0f172a;font-size:0.92rem;font-weight:800;letter-spacing:0;margin-bottom:0.22rem}
+.spec-card p{margin:0;color:#475467;font-size:0.92rem;line-height:1.58}
+.disclosure{background:#f8fafc;border:1px solid var(--rule);border-radius:8px;padding:0.95rem 1rem;font-family:var(--sans);font-size:0.82rem;line-height:1.55;color:#667085}
+.reviews-section,.related-section{background:#f6f8fb;border-top:1px solid var(--rule);padding:clamp(2.5rem,5vw,4rem) clamp(1rem,4vw,3rem)}
+.section-title{font-family:var(--sans);font-style:normal;font-weight:800;letter-spacing:0;color:var(--ink)}
+.review-card,.related-card{background:#fff;border:1px solid var(--rule);border-radius:8px;box-shadow:0 14px 32px rgba(15,23,42,0.07)}.review-card:hover,.related-card:hover{border-color:#93c5fd;box-shadow:0 18px 38px rgba(15,23,42,0.10)}
+footer{background:#fff;border-top:1px solid var(--rule);color:var(--muted)}.footer-logo{font-family:var(--sans);font-style:normal;font-weight:800;color:var(--ink)}.footer-logo strong{color:var(--accent-dark)}.footer-copy{color:var(--muted)}
+@media(max-width:980px){nav{height:auto;min-height:58px}.hero-product{grid-template-columns:1fr;padding:1rem}.img-col{position:relative;top:auto;max-height:none;height:auto;padding:1rem}.main-img-wrap{aspect-ratio:1 / 1;min-height:320px}.buy-btn{position:static}.info-col{padding:1.25rem}.reviews-section,.related-section{padding:3rem 1rem}footer{flex-direction:column;gap:1rem;padding:2rem 1rem;text-align:center}}
 </style>
 </head>
 <body>
@@ -79,7 +119,7 @@ footer{background:var(--ink);padding:2.5rem 4rem;display:flex;align-items:center
 
   <div class="info-col">
     <div>
-      <div class="product-niche">TECH · Video Games › PlayStation 5 › Accessories › Accessory Kits</div>
+      <div class="product-niche">TECH PICK · BUDGET</div>
       <h1 class="product-title">GuliKit TMR Magnetic Joystick Replacement Kit for PS5 DualSense/DualSense Edge Controller,Anti-Drift Electromagnetic Stick Repair Module with Thumbstick Caps, Soldering Required</h1>
       <div class="product-brand">GuliKit</div>
     </div>
@@ -101,15 +141,15 @@ footer{background:var(--ink);padding:2.5rem 4rem;display:flex;align-items:center
       <span class="buy-btn-sub">Opens Amazon · Affiliate link</span>
     </a>
 
-    <div class="bullets-section"><h3>What's included / Key specs</h3><ul class="bullets-list"><li>Upgraded Anti-Drift TMR Joystick Technology – Evolved from GuliKit's patented Hall Effect joystick, the more advanced TMR (Tunnel Magnetoresistance) thumb stick same works with contact-less magnetic field sensing mechanism to eliminate stick drift cause,while offers ultra-low power consumption, enhanced stability, drift-free long lasting durability, high-precision and silk-like smoothness.</li>
-<li>No Circuit Changes Required (Soldering Required) – Replace the original stick module with the enhanced TMR version to fix stick drift on DualSense / DualSense Edge controllers.</li>
-<li>Anti-Interference Structure –Unique structural design prevents interference from magnetic triggers on the joysticks.</li>
-<li>Premium Stick Caps – Includes 2 GuliKit KK Ring anti-friction stick knobs designed for enhanced gripping and comfort during extended play.</li>
-<li>Note: The analog joystick replacement work requires professional tool kit/repair devices(not included in our package) and good skills in desoldering and soldering. If you are not experienced with soldering, we recommend seeking professional assistance to ensure proper installation.After installation, use the Test Tool on our site to run stick calibration first before use. We also have an installation video on our listing for your reference.</li>
-<li>Note for PS5 DualSense Edge Controller:The PS5 DualSense Edge joystick module includes a write-pprotection mechanism. To perform calibration, a flying wire must be temporarily soldered to enable write access, then removed after calibration.Improper operation may damage the controller.Please procceed only if you have soldering experience,or consult a professional repair technician.</li></ul></div>
+    <div class="bullets-section"><h3>What's included / Key specs</h3><ul class="bullets-list"><li class="spec-card"><span class="spec-index">01</span><div><strong>Key detail 1</strong><p>Upgraded Anti-Drift TMR Joystick Technology – Evolved from GuliKit&#x27;s patented Hall Effect joystick, the more advanced TMR (Tunnel Magnetoresistance) thumb stick same works with contact-less magnetic field sensing mechanism to eliminate stick drift cause,while offers ultra-low power consumption, enhanced stability, drift-free long lasting durability, high-precision and silk-like smoothness.</p></div></li>
+<li class="spec-card"><span class="spec-index">02</span><div><strong>Key detail 2</strong><p>No Circuit Changes Required (Soldering Required) – Replace the original stick module with the enhanced TMR version to fix stick drift on DualSense / DualSense Edge controllers.</p></div></li>
+<li class="spec-card"><span class="spec-index">03</span><div><strong>Key detail 3</strong><p>Anti-Interference Structure –Unique structural design prevents interference from magnetic triggers on the joysticks.</p></div></li>
+<li class="spec-card"><span class="spec-index">04</span><div><strong>Key detail 4</strong><p>Premium Stick Caps – Includes 2 GuliKit KK Ring anti-friction stick knobs designed for enhanced gripping and comfort during extended play.</p></div></li>
+<li class="spec-card"><span class="spec-index">05</span><div><strong>Note</strong><p>The analog joystick replacement work requires professional tool kit/repair devices(not included in our package) and good skills in desoldering and soldering. If you are not experienced with soldering, we recommend seeking professional assistance to ensure proper installation.After installation, use the Test Tool on our site to run stick calibration first before use. We also have an installation video on our listing for your reference.</p></div></li>
+<li class="spec-card"><span class="spec-index">06</span><div><strong>Note for PS5 DualSense Edge Controller</strong><p>The PS5 DualSense Edge joystick module includes a write-pprotection mechanism. To perform calibration, a flying wire must be temporarily soldered to enable write access, then removed after calibration.Improper operation may damage the controller.Please procceed only if you have soldering experience,or consult a professional repair technician.</p></div></li></ul></div>
 
     <div class="disclosure">
-      GearPick participates in the Amazon Associates program. We earn a small commission on purchases at no extra cost to you. We only recommend products we'd genuinely buy.
+      <strong>Affiliate disclosure:</strong> GearPick participates in the Amazon Associates program. We may earn a small commission if you buy through a link, at no extra cost to you.
     </div>
   </div>
 </div>
