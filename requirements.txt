@@ -1,0 +1,7 @@
+atproto>=0.0.55
+websockets>=12.0
+aiohttp>=3.9.0
+rich>=13.7.0
+ollama>=0.1.8
+python-dotenv>=1.0.0
+asyncio-throttle>=1.0.2
