@@ -57,9 +57,9 @@
     "asin": "B0GSY3115G",
     "title": "FNIRSI HS-01 Digital Soldering Iron Kit, DC/PD 96W/65W Fast Heating, 180-780\u2109 Adjustable Temperature, OLED Digital Display, Auto Sleep Function, 6 Soldering Tips, for Precision Electronics Repair",
     "niche": "tech",
-    "budget": "mid",
-    "short_desc": "budget Microsoldering Tool",
-    "why_pick": "Easy to use and it works great",
+    "budget": "budget",
+    "short_desc": "Replace C245 Tip",
+    "why_pick": "Compatible with JBC Station, Fast Heating for 3D Printing",
     "bullets": [
       "\u3010Updated Soldering Iron\u3011FNIRSI HS-01 Electric Soldering Iron uses DC and PD dual power input, power up to 96 W(DC), PD power input up to 65 W, Type-C interface, working voltage 9-24 V, and be powered up by a 12 v/3 a or 9 v/2.0 a power bank",
       "\u3010Fast Heating\u3011HS-01 portable soldering iron heats up in seconds. The temperature is displayed on OLED screen, which can be accurately adjusted from 180 \u00b0F to 780 \u00b0F (80 \u00b0C to 420 \u00b0C). Suitable for jewelry, cell phones and other precision objects repair",
@@ -68,7 +68,7 @@
     "rating": "5.0",
     "review_count": "0 ratings",
     "price": "$59.99",
-    "affiliate_url": "https://www.amazon.com/dp/B0GSY3115G?tag=techradar069-20",
+    "affiliate_url": "https://www.amazon.com/dp/B0GSY3115G?tag=https://amzn.to/3PACj4j",
     "slug": "fnirsi-hs-01-digital-soldering-iron-kit-dc-pd-96w-65w-fast-h"
   }
 ]
