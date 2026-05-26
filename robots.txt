@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://demmey.github.io/gearpick/sitemap.xml
