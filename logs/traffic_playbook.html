@@ -5,10 +5,26 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>GearPick Traffic Playbook</title>
 <style>
+*{box-sizing:border-box}
 body{margin:0;background:#f6f8fb;color:#172033;font-family:Inter,Arial,sans-serif;padding:24px}
-header{max-width:1040px;margin:0 auto 20px}
+header,.app{max-width:1180px;margin:0 auto}
+header{margin-bottom:20px}
 h1{font-size:34px;margin:0 0 8px}p{color:#5f6978;line-height:1.55}
-.card{max-width:1040px;margin:0 auto 16px;background:white;border:1px solid #dbe3ee;border-radius:8px;padding:20px;box-shadow:0 12px 28px rgba(20,33,52,.06)}
+.toolbar{display:flex;align-items:center;gap:12px;margin:18px 0}
+.search{width:100%;height:44px;border:1px solid #cbd5e1;border-radius:8px;padding:0 14px;font-size:15px;background:white;color:#172033}
+.count{white-space:nowrap;color:#667085;font-size:13px;font-weight:700}
+.workspace{display:grid;grid-template-columns:minmax(310px,380px) 1fr;gap:18px;align-items:start}
+.product-list{display:grid;gap:10px;max-height:calc(100vh - 178px);overflow:auto;padding-right:4px;position:sticky;top:18px}
+.product-tile{display:grid;grid-template-columns:82px 1fr;gap:12px;width:100%;text-align:left;background:white;border:1px solid #dbe3ee;border-radius:8px;padding:10px;cursor:pointer;color:inherit;box-shadow:0 8px 18px rgba(20,33,52,.04)}
+.product-tile:hover,.product-tile.active{border-color:#38bdf8;background:#f0f9ff}
+.tile-img{width:82px;aspect-ratio:1;border-radius:7px;background:#f8fafc;border:1px solid #e2e8f0;display:grid;place-items:center;overflow:hidden}
+.tile-img img{width:100%;height:100%;object-fit:contain;padding:6px}
+.no-img{font-size:11px;color:#94a3b8;font-weight:700;text-transform:uppercase}
+.tile-copy{min-width:0}
+.tile-copy strong{display:block;margin:4px 0 6px;font-size:14px;line-height:1.25;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.tile-copy span{display:block;color:#5f6978;font-size:12px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.detail-panel{display:none;background:white;border:1px solid #dbe3ee;border-radius:8px;padding:20px;box-shadow:0 12px 28px rgba(20,33,52,.06)}
+.detail-panel.active{display:block}
 .meta{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:#667085;font-weight:700}
 h2{font-size:21px;margin:8px 0 8px}h3{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:#344054;margin:18px 0 8px}
 .actions{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}
@@ -21,9 +37,15 @@ a{color:#075985}.primary,.link{display:inline-block;border:1px solid #cbd5e1;bor
 .mini-link{display:inline-block;border:1px solid #cbd5e1;border-radius:6px;padding:6px 8px;text-decoration:none;font-weight:700;font-size:12px;background:white;color:#075985}
 .mini-link:hover,.link:hover{background:#e0f2fe;border-color:#7dd3fc}
 pre{white-space:pre-wrap;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:12px;line-height:1.45;color:#263241}
+.rendered-draft{background:#fff;border:1px solid #dbe3ee;border-radius:8px;padding:12px;line-height:1.5;color:#263241}
+.rendered-draft p{margin:0 0 10px;color:#263241}
+.rendered-draft p:last-child{margin-bottom:0}
+.rendered-draft a{font-weight:800;text-decoration:underline;text-underline-offset:2px}
 .empty{margin:0;color:#667085}
+.no-results{display:none;background:white;border:1px dashed #cbd5e1;border-radius:8px;padding:18px;color:#667085}
+.no-results.show{display:block}
 .note{background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:12px;margin-top:14px;color:#7c2d12}
-@media(max-width:760px){.search-row{grid-template-columns:1fr}.search-buttons{justify-content:flex-start}}
+@media(max-width:860px){body{padding:16px}.workspace{grid-template-columns:1fr}.product-list{position:static;max-height:none}.search-row{grid-template-columns:1fr}.search-buttons{justify-content:flex-start}}
 </style>
 </head>
 <body>
@@ -32,8 +54,83 @@ pre{white-space:pre-wrap;background:#f8fafc;border:1px solid #e2e8f0;border-radi
   <p>Use this to find relevant conversations and reply manually. Do not send off-topic DMs or copy-paste the same message everywhere. Better traffic comes from answering people who are already asking.</p>
   <div class="note">Disclosure matters: keep #ad or clearly say your page contains affiliate links.</div>
 </header>
-
-<article class="card">
+<main class="app">
+  <div class="toolbar">
+    <input class="search" id="productSearch" type="search" placeholder="Search products, problems, niches, prices...">
+    <div class="count" id="count">8 products</div>
+  </div>
+  <div class="workspace">
+    <aside class="product-list" id="productList">
+      
+<button class="product-tile active" type="button" data-panel="product-0" data-search="corsair vengeance sodimm ddr5 ram 16gb (1x16gb) up to 5600mhz cl48 intel xmp 3.0 desktop computer memory - black (cmsx16gx5m1a5600c48) tech premium $199.99 deliver faster frequencies, greater capacities, lower power consumption lowers power consumption, and high performance to tackle the most demanding tasks, games, and workloads laptop ram upgrade ddr5 sodimm recommendation is 16gb ram enough best laptop memory upgrade cheap ram upgrade">
+  <div class="tile-img"><img src="https://m.media-amazon.com/images/I/51CxSvFTMoL._AC_SL1100_.jpg" alt="CORSAIR Vengeance SODIMM DDR5 RAM 16GB (1x16GB) Up to 5600MHz CL48 Intel XMP 3.0 Desktop Computer Memory - Black (CMSX16GX5M1A5600C48)" loading="lazy"></div>
+  <div class="tile-copy">
+    <div class="meta">tech / premium / $199.99</div>
+    <strong>CORSAIR Vengeance SODIMM DDR5 RAM 16GB (1x16GB) Up to 5600MHz CL48 Intel XMP 3.0 Desktop Computer Memory - Black (CMSX16GX5M1A5600C48)</strong>
+    <span>lowers power consumption, and high performance to tackle the most demanding tasks, games, and workloads</span>
+  </div>
+</button>
+<button class="product-tile" type="button" data-panel="product-1" data-search="gulikit tmr magnetic joystick replacement kit for ps5 dualsense/dualsense edge controller,anti-drift electromagnetic stick repair module with thumbstick caps, soldering required tech budget $17.99 anti stickdrift (tmr) joysticks it gets rid of stickdrift forever stick drift fix ps5 controller drift dualsense analog stick replacement best replacement thumbsticks hall effect vs tmr joystick controller joystick repair analog stick feels loose controller analog stick replacement">
+  <div class="tile-img"><img src="https://m.media-amazon.com/images/I/71zXjZ0ycHL._SL1500_.jpg" alt="GuliKit TMR Magnetic Joystick Replacement Kit for PS5 DualSense/DualSense Edge Controller,Anti-Drift Electromagnetic Stick Repair Module with Thumbstick Caps, Soldering Required" loading="lazy"></div>
+  <div class="tile-copy">
+    <div class="meta">tech / budget / $17.99</div>
+    <strong>GuliKit TMR Magnetic Joystick Replacement Kit for PS5 DualSense/DualSense Edge Controller,Anti-Drift Electromagnetic Stick Repair Module with Thumbstick Caps, Soldering Required</strong>
+    <span>It gets rid of stickdrift forever</span>
+  </div>
+</button>
+<button class="product-tile" type="button" data-panel="product-2" data-search="fnirsi hs-02a 100w portable corded soldering iron kit, 3s fast heating, 212-842℉, pre-set 3 groups temperature, 6 f245 soldering tips, smart digital soldering iron pen tool for electronics repair tech mid $89.99 microsoldering the c245 tips are great you might want to try them best soldering iron for electronics controller repair soldering iron how to remove joystick module microsoldering tools beginner soldering iron tip for controller repair c245 tips controller repair soldering tip for joystick removal heat set insert tip">
+  <div class="tile-img"><img src="https://m.media-amazon.com/images/I/71hG7yeK8mL._AC_SL1500_.jpg" alt="FNIRSI HS-02A 100W Portable Corded Soldering Iron Kit, 3S Fast Heating, 212-842℉, Pre-set 3 Groups Temperature, 6 F245 Soldering Tips, Smart Digital Soldering Iron Pen Tool for Electronics Repair" loading="lazy"></div>
+  <div class="tile-copy">
+    <div class="meta">tech / mid / $89.99</div>
+    <strong>FNIRSI HS-02A 100W Portable Corded Soldering Iron Kit, 3S Fast Heating, 212-842℉, Pre-set 3 Groups Temperature, 6 F245 Soldering Tips, Smart Digital Soldering Iron Pen Tool for Electronics Repair</strong>
+    <span>The C245 tips are great you might want to try them</span>
+  </div>
+</button>
+<button class="product-tile" type="button" data-panel="product-3" data-search="k-silver tmr joystick replacement with video guide, js13 pro thumbsticks - no drift high precision electromagnetic stick repair module with thumbstick caps (a pair for ps5 dualsense/dualsense edge) tech budget $17.98 analogue stick fix it simplifies fixing controllers analogue sticks stick drift fix ps5 controller drift dualsense analog stick replacement best replacement thumbsticks hall effect vs tmr joystick controller joystick repair analog stick feels loose controller analog stick replacement">
+  <div class="tile-img"><img src="https://m.media-amazon.com/images/I/61-Yirk6FRL._AC_SL1363_.jpg" alt="K-Silver TMR Joystick Replacement with Video Guide, JS13 Pro Thumbsticks - No Drift High Precision Electromagnetic Stick Repair Module with Thumbstick Caps (A Pair for PS5 DualSense/DualSense Edge)" loading="lazy"></div>
+  <div class="tile-copy">
+    <div class="meta">tech / budget / $17.98</div>
+    <strong>K-Silver TMR Joystick Replacement with Video Guide, JS13 Pro Thumbsticks - No Drift High Precision Electromagnetic Stick Repair Module with Thumbstick Caps (A Pair for PS5 DualSense/DualSense Edge)</strong>
+    <span>It simplifies fixing controllers analogue sticks</span>
+  </div>
+</button>
+<button class="product-tile" type="button" data-panel="product-4" data-search="c245 soldering tips heat set insert tool for m2/m2.5/m3/m4/m5/m6/m8 threaded inserts,made of copper- compatible with jbc station, fast heating for 3d printing (c245-m4) tech budget $9.99 could be used with a desoldering tip this heats up pretty fast best soldering iron for electronics controller repair soldering iron how to remove joystick module microsoldering tools beginner soldering iron tip for controller repair c245 tips controller repair soldering tip for joystick removal heat set insert tip">
+  <div class="tile-img"><img src="https://m.media-amazon.com/images/I/41ri5Tm7p0L._AC_SL1500_.jpg" alt="C245 Soldering Tips Heat Set Insert Tool for M2/M2.5/M3/M4/M5/M6/M8 Threaded Inserts,Made of Copper- Compatible with JBC Station, Fast Heating for 3D Printing (C245-M4)" loading="lazy"></div>
+  <div class="tile-copy">
+    <div class="meta">tech / budget / $9.99</div>
+    <strong>C245 Soldering Tips Heat Set Insert Tool for M2/M2.5/M3/M4/M5/M6/M8 Threaded Inserts,Made of Copper- Compatible with JBC Station, Fast Heating for 3D Printing (C245-M4)</strong>
+    <span>This heats up pretty fast</span>
+  </div>
+</button>
+<button class="product-tile" type="button" data-panel="product-5" data-search="soldering iron tip for ps5 switch joystick repair with c245hs 02a connector for game controller diy and professional electronics repair(b) tech budget $18.99 soldering iron tip to remove analogue sticks easier to remove using this tool stick drift fix ps5 controller drift dualsense analog stick replacement best replacement thumbsticks hall effect vs tmr joystick controller joystick repair analog stick feels loose controller repair">
+  <div class="tile-img"><img src="https://m.media-amazon.com/images/I/41pqgLN7tbL._AC_SL1001_.jpg" alt="Soldering Iron Tip for PS5 Switch Joystick Repair with C245HS 02A Connector for Game Controller DIY and Professional Electronics Repair(B)" loading="lazy"></div>
+  <div class="tile-copy">
+    <div class="meta">tech / budget / $18.99</div>
+    <strong>Soldering Iron Tip for PS5 Switch Joystick Repair with C245HS 02A Connector for Game Controller DIY and Professional Electronics Repair(B)</strong>
+    <span>Easier to remove using this tool</span>
+  </div>
+</button>
+<button class="product-tile" type="button" data-panel="product-6" data-search="apple 2026 macbook neo 13-inch laptop with a18 pro chip: built for ai and apple intelligence, liquid retina display, 8gb unified memory, 512gb ssd storage, 1080p facetime hd camera, touch id; silver tech premium  flies through everyday tasks and apps it’s an amazing mac at a surprising price. gets the jod done. ">
+  <div class="tile-img"><img src="https://m.media-amazon.com/images/I/61Jgoj4Sc+L._AC_SL1500_.jpg" alt="Apple 2026 MacBook Neo 13-inch Laptop with A18 Pro chip: Built for AI and Apple Intelligence, Liquid Retina Display, 8GB Unified Memory, 512GB SSD Storage, 1080p FaceTime HD Camera, Touch ID; Silver" loading="lazy"></div>
+  <div class="tile-copy">
+    <div class="meta">tech / premium / </div>
+    <strong>Apple 2026 MacBook Neo 13-inch Laptop with A18 Pro chip: Built for AI and Apple Intelligence, Liquid Retina Display, 8GB Unified Memory, 512GB SSD Storage, 1080p FaceTime HD Camera, Touch ID; Silver</strong>
+    <span>it’s an amazing Mac at a surprising price. Gets the jod done.</span>
+  </div>
+</button>
+<button class="product-tile" type="button" data-panel="product-7" data-search="fnirsi hs-01 digital soldering iron kit, dc/pd 96w/65w fast heating, 180-780℉ adjustable temperature, oled digital display, auto sleep function, 6 soldering tips, for precision electronics repair tech budget $59.99 replace c245 tip compatible with jbc station, fast heating for 3d printing best soldering iron for electronics controller repair soldering iron how to remove joystick module microsoldering tools beginner soldering iron tip for controller repair c245 tips controller repair soldering tip for joystick removal heat set insert tip">
+  <div class="tile-img"><img src="https://m.media-amazon.com/images/I/71YVPKn4x4L._AC_SL1500_.jpg" alt="FNIRSI HS-01 Digital Soldering Iron Kit, DC/PD 96W/65W Fast Heating, 180-780℉ Adjustable Temperature, OLED Digital Display, Auto Sleep Function, 6 Soldering Tips, for Precision Electronics Repair" loading="lazy"></div>
+  <div class="tile-copy">
+    <div class="meta">tech / budget / $59.99</div>
+    <strong>FNIRSI HS-01 Digital Soldering Iron Kit, DC/PD 96W/65W Fast Heating, 180-780℉ Adjustable Temperature, OLED Digital Display, Auto Sleep Function, 6 Soldering Tips, for Precision Electronics Repair</strong>
+    <span>Compatible with JBC Station, Fast Heating for 3D Printing</span>
+  </div>
+</button>
+    </aside>
+    <div>
+      <div class="no-results" id="noResults">No products match that search yet.</div>
+      
+<section class="detail-panel active" id="product-0">
   <div class="meta">tech / premium / $199.99</div>
   <h2>CORSAIR Vengeance SODIMM DDR5 RAM 16GB (1x16GB) Up to 5600MHz CL48 Intel XMP 3.0 Desktop Computer Memory - Black (CMSX16GX5M1A5600C48)</h2>
   <p>lowers power consumption, and high performance to tackle the most demanding tasks, games, and workloads</p>
@@ -44,34 +141,44 @@ pre{white-space:pre-wrap;background:#f8fafc;border:1px solid #e2e8f0;border-radi
   <div class="search-table">
 <div class="search-row">
   <div class="question">laptop ram upgrade</div>
-  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=%22laptop+ram+upgrade%22&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=%22laptop+ram+upgrade%22&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=%22laptop+ram+upgrade%22" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=%22laptop+ram+upgrade%22+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
+  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=laptop+ram+upgrade&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=laptop+ram+upgrade&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=laptop+ram+upgrade" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=laptop+ram+upgrade+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
 </div>
 
 <div class="search-row">
   <div class="question">ddr5 sodimm recommendation</div>
-  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=%22ddr5+sodimm+recommendation%22&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=%22ddr5+sodimm+recommendation%22&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=%22ddr5+sodimm+recommendation%22" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=%22ddr5+sodimm+recommendation%22+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
+  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=ddr5+sodimm+recommendation&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=ddr5+sodimm+recommendation&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=ddr5+sodimm+recommendation" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=ddr5+sodimm+recommendation+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
 </div>
 
 <div class="search-row">
   <div class="question">is 16gb ram enough</div>
-  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=%22is+16gb+ram+enough%22&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=%22is+16gb+ram+enough%22&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=%22is+16gb+ram+enough%22" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=%22is+16gb+ram+enough%22+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
+  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=is+16gb+ram+enough&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=is+16gb+ram+enough&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=is+16gb+ram+enough" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=is+16gb+ram+enough+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
 </div>
 
 <div class="search-row">
   <div class="question">best laptop memory upgrade</div>
-  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=%22best+laptop+memory+upgrade%22&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=%22best+laptop+memory+upgrade%22&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=%22best+laptop+memory+upgrade%22" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=%22best+laptop+memory+upgrade%22+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
+  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=best+laptop+memory+upgrade&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=best+laptop+memory+upgrade&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=best+laptop+memory+upgrade" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=best+laptop+memory+upgrade+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
 </div>
 
 <div class="search-row">
   <div class="question">cheap ram upgrade</div>
-  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=%22cheap+ram+upgrade%22&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=%22cheap+ram+upgrade%22&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=%22cheap+ram+upgrade%22" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=%22cheap+ram+upgrade%22+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
+  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=cheap+ram+upgrade&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=cheap+ram+upgrade&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=cheap+ram+upgrade" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=cheap+ram+upgrade+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
 </div></div>
   <h3>Simple reply draft</h3>
   <pre>If you&#x27;re comparing options, this one is worth checking: CORSAIR Vengeance SODIMM DDR5 RAM 16GB (1x16GB) Up to 5600MHz CL48 Intel XMP 3.0 Des. I saved it because lowers power consumption, and high performance to tackle the most demanding tasks, games, and workloads. Specs + link here: https://demmey.github.io/gearpick/corsair-vengeance-sodimm-ddr5-ram-16gb-1x16gb-up-to-5600mhz.html #ad</pre>
+  <h3>Reddit/forums markdown draft</h3>
+  <pre>If you&#x27;re comparing options, [CORSAIR Vengeance SODIMM DDR5 RAM 16GB (1x16GB) Up to 5600MHz CL48 Intel](https://demmey.github.io/gearpick/corsair-vengeance-sodimm-ddr5-ram-16gb-1x16gb-up-to-5600mhz.html) is worth checking. I saved it because lowers power consumption, and high performance to tackle the most demanding tasks, games, and workloads. #ad</pre>
+  <h3>Clickable preview</h3>
+  <div class="rendered-draft">If you're comparing options, <a href="https://demmey.github.io/gearpick/corsair-vengeance-sodimm-ddr5-ram-16gb-1x16gb-up-to-5600mhz.html" target="_blank" rel="noopener">CORSAIR Vengeance SODIMM DDR5 RAM 16GB (1x16GB) Up to 5600MHz CL48 Intel</a> is worth checking. I saved it because lowers power consumption, and high performance to tackle the most demanding tasks, games, and workloads. <strong>#ad</strong></div>
   <h3>More natural openers</h3>
   <pre>For laptop ram upgrade, I would look at CORSAIR Vengeance SODIMM DDR5 RAM 16GB (1x16GB) Up to 5600MHz CL48 Intel. Check compatibility first, but I saved the specs here: https://demmey.github.io/gearpick/corsair-vengeance-sodimm-ddr5-ram-16gb-1x16gb-up-to-5600mhz.html #ad
 For ddr5 sodimm recommendation, I would look at CORSAIR Vengeance SODIMM DDR5 RAM 16GB (1x16GB) Up to 5600MHz CL48 Intel. Check compatibility first, but I saved the specs here: https://demmey.github.io/gearpick/corsair-vengeance-sodimm-ddr5-ram-16gb-1x16gb-up-to-5600mhz.html #ad
 For is 16gb ram enough, I would look at CORSAIR Vengeance SODIMM DDR5 RAM 16GB (1x16GB) Up to 5600MHz CL48 Intel. Check compatibility first, but I saved the specs here: https://demmey.github.io/gearpick/corsair-vengeance-sodimm-ddr5-ram-16gb-1x16gb-up-to-5600mhz.html #ad</pre>
+  <h3>Markdown openers</h3>
+  <pre>For laptop ram upgrade, I would look at [CORSAIR Vengeance SODIMM DDR5 RAM 16GB (1x16GB) Up to 5600MHz CL48 Intel](https://demmey.github.io/gearpick/corsair-vengeance-sodimm-ddr5-ram-16gb-1x16gb-up-to-5600mhz.html). Check compatibility first. #ad
+For ddr5 sodimm recommendation, I would look at [CORSAIR Vengeance SODIMM DDR5 RAM 16GB (1x16GB) Up to 5600MHz CL48 Intel](https://demmey.github.io/gearpick/corsair-vengeance-sodimm-ddr5-ram-16gb-1x16gb-up-to-5600mhz.html). Check compatibility first. #ad
+For is 16gb ram enough, I would look at [CORSAIR Vengeance SODIMM DDR5 RAM 16GB (1x16GB) Up to 5600MHz CL48 Intel](https://demmey.github.io/gearpick/corsair-vengeance-sodimm-ddr5-ram-16gb-1x16gb-up-to-5600mhz.html). Check compatibility first. #ad</pre>
+  <h3>Clickable opener preview</h3>
+  <div class="rendered-draft"><p>For laptop ram upgrade, I would look at <a href="https://demmey.github.io/gearpick/corsair-vengeance-sodimm-ddr5-ram-16gb-1x16gb-up-to-5600mhz.html" target="_blank" rel="noopener">CORSAIR Vengeance SODIMM DDR5 RAM 16GB (1x16GB) Up to 5600MHz CL48 Intel</a>. Check compatibility first. <strong>#ad</strong></p><p>For ddr5 sodimm recommendation, I would look at <a href="https://demmey.github.io/gearpick/corsair-vengeance-sodimm-ddr5-ram-16gb-1x16gb-up-to-5600mhz.html" target="_blank" rel="noopener">CORSAIR Vengeance SODIMM DDR5 RAM 16GB (1x16GB) Up to 5600MHz CL48 Intel</a>. Check compatibility first. <strong>#ad</strong></p><p>For is 16gb ram enough, I would look at <a href="https://demmey.github.io/gearpick/corsair-vengeance-sodimm-ddr5-ram-16gb-1x16gb-up-to-5600mhz.html" target="_blank" rel="noopener">CORSAIR Vengeance SODIMM DDR5 RAM 16GB (1x16GB) Up to 5600MHz CL48 Intel</a>. Check compatibility first. <strong>#ad</strong></p></div>
   <h3>Post on your own account</h3>
   <pre>Added a new GearPick: CORSAIR Vengeance SODIMM DDR5 RAM 16GB (1x16GB) Up to 5600MHz CL48 Intel XMP 3.0 Desktop Com
 
@@ -79,8 +186,8 @@ Why I saved it: lowers power consumption, and high performance to tackle the mos
 Current price I saw: $199.99\nSpecs + Amazon link: https://demmey.github.io/gearpick/corsair-vengeance-sodimm-ddr5-ram-16gb-1x16gb-up-to-5600mhz.html
 
 #ad</pre>
-</article>
-<article class="card">
+</section>
+<section class="detail-panel" id="product-1">
   <div class="meta">tech / budget / $17.99</div>
   <h2>GuliKit TMR Magnetic Joystick Replacement Kit for PS5 DualSense/DualSense Edge Controller,Anti-Drift Electromagnetic Stick Repair Module with Thumbstick Caps, Soldering Required</h2>
   <p>It gets rid of stickdrift forever</p>
@@ -91,49 +198,59 @@ Current price I saw: $199.99\nSpecs + Amazon link: https://demmey.github.io/gear
   <div class="search-table">
 <div class="search-row">
   <div class="question">stick drift fix</div>
-  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=%22stick+drift+fix%22&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=%22stick+drift+fix%22&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=%22stick+drift+fix%22" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=%22stick+drift+fix%22+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
+  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=stick+drift+fix&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=stick+drift+fix&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=stick+drift+fix" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=stick+drift+fix+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
 </div>
 
 <div class="search-row">
   <div class="question">ps5 controller drift</div>
-  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=%22ps5+controller+drift%22&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=%22ps5+controller+drift%22&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=%22ps5+controller+drift%22" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=%22ps5+controller+drift%22+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
+  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=ps5+controller+drift&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=ps5+controller+drift&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=ps5+controller+drift" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=ps5+controller+drift+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
 </div>
 
 <div class="search-row">
   <div class="question">dualsense analog stick replacement</div>
-  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=%22dualsense+analog+stick+replacement%22&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=%22dualsense+analog+stick+replacement%22&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=%22dualsense+analog+stick+replacement%22" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=%22dualsense+analog+stick+replacement%22+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
+  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=dualsense+analog+stick+replacement&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=dualsense+analog+stick+replacement&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=dualsense+analog+stick+replacement" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=dualsense+analog+stick+replacement+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
 </div>
 
 <div class="search-row">
   <div class="question">best replacement thumbsticks</div>
-  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=%22best+replacement+thumbsticks%22&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=%22best+replacement+thumbsticks%22&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=%22best+replacement+thumbsticks%22" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=%22best+replacement+thumbsticks%22+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
+  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=best+replacement+thumbsticks&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=best+replacement+thumbsticks&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=best+replacement+thumbsticks" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=best+replacement+thumbsticks+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
 </div>
 
 <div class="search-row">
   <div class="question">hall effect vs tmr joystick</div>
-  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=%22hall+effect+vs+tmr+joystick%22&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=%22hall+effect+vs+tmr+joystick%22&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=%22hall+effect+vs+tmr+joystick%22" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=%22hall+effect+vs+tmr+joystick%22+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
+  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=hall+effect+vs+tmr+joystick&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=hall+effect+vs+tmr+joystick&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=hall+effect+vs+tmr+joystick" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=hall+effect+vs+tmr+joystick+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
 </div>
 
 <div class="search-row">
   <div class="question">controller joystick repair</div>
-  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=%22controller+joystick+repair%22&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=%22controller+joystick+repair%22&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=%22controller+joystick+repair%22" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=%22controller+joystick+repair%22+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
+  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=controller+joystick+repair&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=controller+joystick+repair&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=controller+joystick+repair" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=controller+joystick+repair+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
 </div>
 
 <div class="search-row">
   <div class="question">analog stick feels loose</div>
-  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=%22analog+stick+feels+loose%22&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=%22analog+stick+feels+loose%22&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=%22analog+stick+feels+loose%22" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=%22analog+stick+feels+loose%22+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
+  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=analog+stick+feels+loose&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=analog+stick+feels+loose&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=analog+stick+feels+loose" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=analog+stick+feels+loose+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
 </div>
 
 <div class="search-row">
   <div class="question">controller analog stick replacement</div>
-  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=%22controller+analog+stick+replacement%22&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=%22controller+analog+stick+replacement%22&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=%22controller+analog+stick+replacement%22" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=%22controller+analog+stick+replacement%22+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
+  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=controller+analog+stick+replacement&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=controller+analog+stick+replacement&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=controller+analog+stick+replacement" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=controller+analog+stick+replacement+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
 </div></div>
   <h3>Simple reply draft</h3>
   <pre>If you&#x27;re comparing options, this one is worth checking: GuliKit TMR Magnetic Joystick Replacement Kit for PS5 DualSense/DualSense Edge Contr. I saved it because It gets rid of stickdrift forever. Specs + link here: https://demmey.github.io/gearpick/gulikit-tmr-magnetic-joystick-replacement-kit-for-ps5-dualse.html #ad</pre>
+  <h3>Reddit/forums markdown draft</h3>
+  <pre>If you&#x27;re comparing options, [GuliKit TMR Magnetic Joystick Replacement Kit for PS5 DualSense/DualSens](https://demmey.github.io/gearpick/gulikit-tmr-magnetic-joystick-replacement-kit-for-ps5-dualse.html) is worth checking. I saved it because It gets rid of stickdrift forever. #ad</pre>
+  <h3>Clickable preview</h3>
+  <div class="rendered-draft">If you're comparing options, <a href="https://demmey.github.io/gearpick/gulikit-tmr-magnetic-joystick-replacement-kit-for-ps5-dualse.html" target="_blank" rel="noopener">GuliKit TMR Magnetic Joystick Replacement Kit for PS5 DualSense/DualSens</a> is worth checking. I saved it because It gets rid of stickdrift forever. <strong>#ad</strong></div>
   <h3>More natural openers</h3>
   <pre>For stick drift fix, I would look at GuliKit TMR Magnetic Joystick Replacement Kit for PS5 DualSense/DualSens. Check compatibility first, but I saved the specs here: https://demmey.github.io/gearpick/gulikit-tmr-magnetic-joystick-replacement-kit-for-ps5-dualse.html #ad
 For ps5 controller drift, I would look at GuliKit TMR Magnetic Joystick Replacement Kit for PS5 DualSense/DualSens. Check compatibility first, but I saved the specs here: https://demmey.github.io/gearpick/gulikit-tmr-magnetic-joystick-replacement-kit-for-ps5-dualse.html #ad
 For dualsense analog stick replacement, I would look at GuliKit TMR Magnetic Joystick Replacement Kit for PS5 DualSense/DualSens. Check compatibility first, but I saved the specs here: https://demmey.github.io/gearpick/gulikit-tmr-magnetic-joystick-replacement-kit-for-ps5-dualse.html #ad</pre>
+  <h3>Markdown openers</h3>
+  <pre>For stick drift fix, I would look at [GuliKit TMR Magnetic Joystick Replacement Kit for PS5 DualSense/DualSens](https://demmey.github.io/gearpick/gulikit-tmr-magnetic-joystick-replacement-kit-for-ps5-dualse.html). Check compatibility first. #ad
+For ps5 controller drift, I would look at [GuliKit TMR Magnetic Joystick Replacement Kit for PS5 DualSense/DualSens](https://demmey.github.io/gearpick/gulikit-tmr-magnetic-joystick-replacement-kit-for-ps5-dualse.html). Check compatibility first. #ad
+For dualsense analog stick replacement, I would look at [GuliKit TMR Magnetic Joystick Replacement Kit for PS5 DualSense/DualSens](https://demmey.github.io/gearpick/gulikit-tmr-magnetic-joystick-replacement-kit-for-ps5-dualse.html). Check compatibility first. #ad</pre>
+  <h3>Clickable opener preview</h3>
+  <div class="rendered-draft"><p>For stick drift fix, I would look at <a href="https://demmey.github.io/gearpick/gulikit-tmr-magnetic-joystick-replacement-kit-for-ps5-dualse.html" target="_blank" rel="noopener">GuliKit TMR Magnetic Joystick Replacement Kit for PS5 DualSense/DualSens</a>. Check compatibility first. <strong>#ad</strong></p><p>For ps5 controller drift, I would look at <a href="https://demmey.github.io/gearpick/gulikit-tmr-magnetic-joystick-replacement-kit-for-ps5-dualse.html" target="_blank" rel="noopener">GuliKit TMR Magnetic Joystick Replacement Kit for PS5 DualSense/DualSens</a>. Check compatibility first. <strong>#ad</strong></p><p>For dualsense analog stick replacement, I would look at <a href="https://demmey.github.io/gearpick/gulikit-tmr-magnetic-joystick-replacement-kit-for-ps5-dualse.html" target="_blank" rel="noopener">GuliKit TMR Magnetic Joystick Replacement Kit for PS5 DualSense/DualSens</a>. Check compatibility first. <strong>#ad</strong></p></div>
   <h3>Post on your own account</h3>
   <pre>Added a new GearPick: GuliKit TMR Magnetic Joystick Replacement Kit for PS5 DualSense/DualSense Edge Controller
 
@@ -141,8 +258,8 @@ Why I saved it: It gets rid of stickdrift forever
 Current price I saw: $17.99\nSpecs + Amazon link: https://demmey.github.io/gearpick/gulikit-tmr-magnetic-joystick-replacement-kit-for-ps5-dualse.html
 
 #ad</pre>
-</article>
-<article class="card">
+</section>
+<section class="detail-panel" id="product-2">
   <div class="meta">tech / mid / $89.99</div>
   <h2>FNIRSI HS-02A 100W Portable Corded Soldering Iron Kit, 3S Fast Heating, 212-842℉, Pre-set 3 Groups Temperature, 6 F245 Soldering Tips, Smart Digital Soldering Iron Pen Tool for Electronics Repair</h2>
   <p>The C245 tips are great you might want to try them</p>
@@ -153,49 +270,59 @@ Current price I saw: $17.99\nSpecs + Amazon link: https://demmey.github.io/gearp
   <div class="search-table">
 <div class="search-row">
   <div class="question">best soldering iron for electronics</div>
-  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=%22best+soldering+iron+for+electronics%22&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=%22best+soldering+iron+for+electronics%22&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=%22best+soldering+iron+for+electronics%22" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=%22best+soldering+iron+for+electronics%22+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
+  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=best+soldering+iron+for+electronics&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=best+soldering+iron+for+electronics&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=best+soldering+iron+for+electronics" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=best+soldering+iron+for+electronics+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
 </div>
 
 <div class="search-row">
   <div class="question">controller repair soldering iron</div>
-  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=%22controller+repair+soldering+iron%22&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=%22controller+repair+soldering+iron%22&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=%22controller+repair+soldering+iron%22" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=%22controller+repair+soldering+iron%22+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
+  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=controller+repair+soldering+iron&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=controller+repair+soldering+iron&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=controller+repair+soldering+iron" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=controller+repair+soldering+iron+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
 </div>
 
 <div class="search-row">
   <div class="question">how to remove joystick module</div>
-  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=%22how+to+remove+joystick+module%22&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=%22how+to+remove+joystick+module%22&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=%22how+to+remove+joystick+module%22" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=%22how+to+remove+joystick+module%22+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
+  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=how+to+remove+joystick+module&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=how+to+remove+joystick+module&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=how+to+remove+joystick+module" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=how+to+remove+joystick+module+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
 </div>
 
 <div class="search-row">
   <div class="question">microsoldering tools beginner</div>
-  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=%22microsoldering+tools+beginner%22&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=%22microsoldering+tools+beginner%22&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=%22microsoldering+tools+beginner%22" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=%22microsoldering+tools+beginner%22+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
+  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=microsoldering+tools+beginner&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=microsoldering+tools+beginner&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=microsoldering+tools+beginner" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=microsoldering+tools+beginner+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
 </div>
 
 <div class="search-row">
   <div class="question">soldering iron tip for controller repair</div>
-  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=%22soldering+iron+tip+for+controller+repair%22&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=%22soldering+iron+tip+for+controller+repair%22&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=%22soldering+iron+tip+for+controller+repair%22" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=%22soldering+iron+tip+for+controller+repair%22+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
+  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=soldering+iron+tip+for+controller+repair&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=soldering+iron+tip+for+controller+repair&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=soldering+iron+tip+for+controller+repair" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=soldering+iron+tip+for+controller+repair+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
 </div>
 
 <div class="search-row">
   <div class="question">c245 tips controller repair</div>
-  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=%22c245+tips+controller+repair%22&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=%22c245+tips+controller+repair%22&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=%22c245+tips+controller+repair%22" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=%22c245+tips+controller+repair%22+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
+  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=c245+tips+controller+repair&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=c245+tips+controller+repair&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=c245+tips+controller+repair" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=c245+tips+controller+repair+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
 </div>
 
 <div class="search-row">
   <div class="question">soldering tip for joystick removal</div>
-  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=%22soldering+tip+for+joystick+removal%22&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=%22soldering+tip+for+joystick+removal%22&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=%22soldering+tip+for+joystick+removal%22" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=%22soldering+tip+for+joystick+removal%22+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
+  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=soldering+tip+for+joystick+removal&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=soldering+tip+for+joystick+removal&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=soldering+tip+for+joystick+removal" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=soldering+tip+for+joystick+removal+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
 </div>
 
 <div class="search-row">
   <div class="question">heat set insert tip</div>
-  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=%22heat+set+insert+tip%22&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=%22heat+set+insert+tip%22&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=%22heat+set+insert+tip%22" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=%22heat+set+insert+tip%22+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
+  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=heat+set+insert+tip&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=heat+set+insert+tip&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=heat+set+insert+tip" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=heat+set+insert+tip+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
 </div></div>
   <h3>Simple reply draft</h3>
   <pre>If you&#x27;re comparing options, this one is worth checking: FNIRSI HS-02A 100W Portable Corded Soldering Iron Kit. I saved it because The C245 tips are great you might want to try them. Specs + link here: https://demmey.github.io/gearpick/fnirsi-hs-02a-100w-portable-corded-soldering-iron-kit-3s-fas.html #ad</pre>
+  <h3>Reddit/forums markdown draft</h3>
+  <pre>If you&#x27;re comparing options, [FNIRSI HS-02A 100W Portable Corded Soldering Iron Kit](https://demmey.github.io/gearpick/fnirsi-hs-02a-100w-portable-corded-soldering-iron-kit-3s-fas.html) is worth checking. I saved it because The C245 tips are great you might want to try them. #ad</pre>
+  <h3>Clickable preview</h3>
+  <div class="rendered-draft">If you're comparing options, <a href="https://demmey.github.io/gearpick/fnirsi-hs-02a-100w-portable-corded-soldering-iron-kit-3s-fas.html" target="_blank" rel="noopener">FNIRSI HS-02A 100W Portable Corded Soldering Iron Kit</a> is worth checking. I saved it because The C245 tips are great you might want to try them. <strong>#ad</strong></div>
   <h3>More natural openers</h3>
   <pre>For best soldering iron for electronics, I would look at FNIRSI HS-02A 100W Portable Corded Soldering Iron Kit. Check compatibility first, but I saved the specs here: https://demmey.github.io/gearpick/fnirsi-hs-02a-100w-portable-corded-soldering-iron-kit-3s-fas.html #ad
 For controller repair soldering iron, I would look at FNIRSI HS-02A 100W Portable Corded Soldering Iron Kit. Check compatibility first, but I saved the specs here: https://demmey.github.io/gearpick/fnirsi-hs-02a-100w-portable-corded-soldering-iron-kit-3s-fas.html #ad
 For how to remove joystick module, I would look at FNIRSI HS-02A 100W Portable Corded Soldering Iron Kit. Check compatibility first, but I saved the specs here: https://demmey.github.io/gearpick/fnirsi-hs-02a-100w-portable-corded-soldering-iron-kit-3s-fas.html #ad</pre>
+  <h3>Markdown openers</h3>
+  <pre>For best soldering iron for electronics, I would look at [FNIRSI HS-02A 100W Portable Corded Soldering Iron Kit](https://demmey.github.io/gearpick/fnirsi-hs-02a-100w-portable-corded-soldering-iron-kit-3s-fas.html). Check compatibility first. #ad
+For controller repair soldering iron, I would look at [FNIRSI HS-02A 100W Portable Corded Soldering Iron Kit](https://demmey.github.io/gearpick/fnirsi-hs-02a-100w-portable-corded-soldering-iron-kit-3s-fas.html). Check compatibility first. #ad
+For how to remove joystick module, I would look at [FNIRSI HS-02A 100W Portable Corded Soldering Iron Kit](https://demmey.github.io/gearpick/fnirsi-hs-02a-100w-portable-corded-soldering-iron-kit-3s-fas.html). Check compatibility first. #ad</pre>
+  <h3>Clickable opener preview</h3>
+  <div class="rendered-draft"><p>For best soldering iron for electronics, I would look at <a href="https://demmey.github.io/gearpick/fnirsi-hs-02a-100w-portable-corded-soldering-iron-kit-3s-fas.html" target="_blank" rel="noopener">FNIRSI HS-02A 100W Portable Corded Soldering Iron Kit</a>. Check compatibility first. <strong>#ad</strong></p><p>For controller repair soldering iron, I would look at <a href="https://demmey.github.io/gearpick/fnirsi-hs-02a-100w-portable-corded-soldering-iron-kit-3s-fas.html" target="_blank" rel="noopener">FNIRSI HS-02A 100W Portable Corded Soldering Iron Kit</a>. Check compatibility first. <strong>#ad</strong></p><p>For how to remove joystick module, I would look at <a href="https://demmey.github.io/gearpick/fnirsi-hs-02a-100w-portable-corded-soldering-iron-kit-3s-fas.html" target="_blank" rel="noopener">FNIRSI HS-02A 100W Portable Corded Soldering Iron Kit</a>. Check compatibility first. <strong>#ad</strong></p></div>
   <h3>Post on your own account</h3>
   <pre>Added a new GearPick: FNIRSI HS-02A 100W Portable Corded Soldering Iron Kit
 
@@ -203,8 +330,8 @@ Why I saved it: The C245 tips are great you might want to try them
 Current price I saw: $89.99\nSpecs + Amazon link: https://demmey.github.io/gearpick/fnirsi-hs-02a-100w-portable-corded-soldering-iron-kit-3s-fas.html
 
 #ad</pre>
-</article>
-<article class="card">
+</section>
+<section class="detail-panel" id="product-3">
   <div class="meta">tech / budget / $17.98</div>
   <h2>K-Silver TMR Joystick Replacement with Video Guide, JS13 Pro Thumbsticks - No Drift High Precision Electromagnetic Stick Repair Module with Thumbstick Caps (A Pair for PS5 DualSense/DualSense Edge)</h2>
   <p>It simplifies fixing controllers analogue sticks</p>
@@ -215,49 +342,59 @@ Current price I saw: $89.99\nSpecs + Amazon link: https://demmey.github.io/gearp
   <div class="search-table">
 <div class="search-row">
   <div class="question">stick drift fix</div>
-  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=%22stick+drift+fix%22&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=%22stick+drift+fix%22&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=%22stick+drift+fix%22" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=%22stick+drift+fix%22+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
+  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=stick+drift+fix&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=stick+drift+fix&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=stick+drift+fix" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=stick+drift+fix+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
 </div>
 
 <div class="search-row">
   <div class="question">ps5 controller drift</div>
-  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=%22ps5+controller+drift%22&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=%22ps5+controller+drift%22&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=%22ps5+controller+drift%22" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=%22ps5+controller+drift%22+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
+  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=ps5+controller+drift&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=ps5+controller+drift&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=ps5+controller+drift" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=ps5+controller+drift+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
 </div>
 
 <div class="search-row">
   <div class="question">dualsense analog stick replacement</div>
-  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=%22dualsense+analog+stick+replacement%22&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=%22dualsense+analog+stick+replacement%22&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=%22dualsense+analog+stick+replacement%22" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=%22dualsense+analog+stick+replacement%22+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
+  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=dualsense+analog+stick+replacement&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=dualsense+analog+stick+replacement&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=dualsense+analog+stick+replacement" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=dualsense+analog+stick+replacement+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
 </div>
 
 <div class="search-row">
   <div class="question">best replacement thumbsticks</div>
-  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=%22best+replacement+thumbsticks%22&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=%22best+replacement+thumbsticks%22&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=%22best+replacement+thumbsticks%22" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=%22best+replacement+thumbsticks%22+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
+  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=best+replacement+thumbsticks&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=best+replacement+thumbsticks&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=best+replacement+thumbsticks" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=best+replacement+thumbsticks+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
 </div>
 
 <div class="search-row">
   <div class="question">hall effect vs tmr joystick</div>
-  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=%22hall+effect+vs+tmr+joystick%22&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=%22hall+effect+vs+tmr+joystick%22&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=%22hall+effect+vs+tmr+joystick%22" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=%22hall+effect+vs+tmr+joystick%22+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
+  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=hall+effect+vs+tmr+joystick&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=hall+effect+vs+tmr+joystick&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=hall+effect+vs+tmr+joystick" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=hall+effect+vs+tmr+joystick+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
 </div>
 
 <div class="search-row">
   <div class="question">controller joystick repair</div>
-  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=%22controller+joystick+repair%22&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=%22controller+joystick+repair%22&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=%22controller+joystick+repair%22" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=%22controller+joystick+repair%22+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
+  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=controller+joystick+repair&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=controller+joystick+repair&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=controller+joystick+repair" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=controller+joystick+repair+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
 </div>
 
 <div class="search-row">
   <div class="question">analog stick feels loose</div>
-  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=%22analog+stick+feels+loose%22&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=%22analog+stick+feels+loose%22&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=%22analog+stick+feels+loose%22" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=%22analog+stick+feels+loose%22+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
+  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=analog+stick+feels+loose&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=analog+stick+feels+loose&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=analog+stick+feels+loose" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=analog+stick+feels+loose+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
 </div>
 
 <div class="search-row">
   <div class="question">controller analog stick replacement</div>
-  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=%22controller+analog+stick+replacement%22&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=%22controller+analog+stick+replacement%22&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=%22controller+analog+stick+replacement%22" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=%22controller+analog+stick+replacement%22+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
+  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=controller+analog+stick+replacement&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=controller+analog+stick+replacement&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=controller+analog+stick+replacement" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=controller+analog+stick+replacement+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
 </div></div>
   <h3>Simple reply draft</h3>
   <pre>If you&#x27;re comparing options, this one is worth checking: K-Silver TMR Joystick Replacement with Video Guide. I saved it because It simplifies fixing controllers analogue sticks. Specs + link here: https://demmey.github.io/gearpick/k-silver-tmr-joystick-replacement-with-video-guide-js13-pro.html #ad</pre>
+  <h3>Reddit/forums markdown draft</h3>
+  <pre>If you&#x27;re comparing options, [K-Silver TMR Joystick Replacement with Video Guide](https://demmey.github.io/gearpick/k-silver-tmr-joystick-replacement-with-video-guide-js13-pro.html) is worth checking. I saved it because It simplifies fixing controllers analogue sticks. #ad</pre>
+  <h3>Clickable preview</h3>
+  <div class="rendered-draft">If you're comparing options, <a href="https://demmey.github.io/gearpick/k-silver-tmr-joystick-replacement-with-video-guide-js13-pro.html" target="_blank" rel="noopener">K-Silver TMR Joystick Replacement with Video Guide</a> is worth checking. I saved it because It simplifies fixing controllers analogue sticks. <strong>#ad</strong></div>
   <h3>More natural openers</h3>
   <pre>For stick drift fix, I would look at K-Silver TMR Joystick Replacement with Video Guide. Check compatibility first, but I saved the specs here: https://demmey.github.io/gearpick/k-silver-tmr-joystick-replacement-with-video-guide-js13-pro.html #ad
 For ps5 controller drift, I would look at K-Silver TMR Joystick Replacement with Video Guide. Check compatibility first, but I saved the specs here: https://demmey.github.io/gearpick/k-silver-tmr-joystick-replacement-with-video-guide-js13-pro.html #ad
 For dualsense analog stick replacement, I would look at K-Silver TMR Joystick Replacement with Video Guide. Check compatibility first, but I saved the specs here: https://demmey.github.io/gearpick/k-silver-tmr-joystick-replacement-with-video-guide-js13-pro.html #ad</pre>
+  <h3>Markdown openers</h3>
+  <pre>For stick drift fix, I would look at [K-Silver TMR Joystick Replacement with Video Guide](https://demmey.github.io/gearpick/k-silver-tmr-joystick-replacement-with-video-guide-js13-pro.html). Check compatibility first. #ad
+For ps5 controller drift, I would look at [K-Silver TMR Joystick Replacement with Video Guide](https://demmey.github.io/gearpick/k-silver-tmr-joystick-replacement-with-video-guide-js13-pro.html). Check compatibility first. #ad
+For dualsense analog stick replacement, I would look at [K-Silver TMR Joystick Replacement with Video Guide](https://demmey.github.io/gearpick/k-silver-tmr-joystick-replacement-with-video-guide-js13-pro.html). Check compatibility first. #ad</pre>
+  <h3>Clickable opener preview</h3>
+  <div class="rendered-draft"><p>For stick drift fix, I would look at <a href="https://demmey.github.io/gearpick/k-silver-tmr-joystick-replacement-with-video-guide-js13-pro.html" target="_blank" rel="noopener">K-Silver TMR Joystick Replacement with Video Guide</a>. Check compatibility first. <strong>#ad</strong></p><p>For ps5 controller drift, I would look at <a href="https://demmey.github.io/gearpick/k-silver-tmr-joystick-replacement-with-video-guide-js13-pro.html" target="_blank" rel="noopener">K-Silver TMR Joystick Replacement with Video Guide</a>. Check compatibility first. <strong>#ad</strong></p><p>For dualsense analog stick replacement, I would look at <a href="https://demmey.github.io/gearpick/k-silver-tmr-joystick-replacement-with-video-guide-js13-pro.html" target="_blank" rel="noopener">K-Silver TMR Joystick Replacement with Video Guide</a>. Check compatibility first. <strong>#ad</strong></p></div>
   <h3>Post on your own account</h3>
   <pre>Added a new GearPick: K-Silver TMR Joystick Replacement with Video Guide
 
@@ -265,8 +402,8 @@ Why I saved it: It simplifies fixing controllers analogue sticks
 Current price I saw: $17.98\nSpecs + Amazon link: https://demmey.github.io/gearpick/k-silver-tmr-joystick-replacement-with-video-guide-js13-pro.html
 
 #ad</pre>
-</article>
-<article class="card">
+</section>
+<section class="detail-panel" id="product-4">
   <div class="meta">tech / budget / $9.99</div>
   <h2>C245 Soldering Tips Heat Set Insert Tool for M2/M2.5/M3/M4/M5/M6/M8 Threaded Inserts,Made of Copper- Compatible with JBC Station, Fast Heating for 3D Printing (C245-M4)</h2>
   <p>This heats up pretty fast</p>
@@ -277,49 +414,59 @@ Current price I saw: $17.98\nSpecs + Amazon link: https://demmey.github.io/gearp
   <div class="search-table">
 <div class="search-row">
   <div class="question">best soldering iron for electronics</div>
-  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=%22best+soldering+iron+for+electronics%22&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=%22best+soldering+iron+for+electronics%22&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=%22best+soldering+iron+for+electronics%22" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=%22best+soldering+iron+for+electronics%22+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
+  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=best+soldering+iron+for+electronics&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=best+soldering+iron+for+electronics&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=best+soldering+iron+for+electronics" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=best+soldering+iron+for+electronics+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
 </div>
 
 <div class="search-row">
   <div class="question">controller repair soldering iron</div>
-  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=%22controller+repair+soldering+iron%22&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=%22controller+repair+soldering+iron%22&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=%22controller+repair+soldering+iron%22" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=%22controller+repair+soldering+iron%22+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
+  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=controller+repair+soldering+iron&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=controller+repair+soldering+iron&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=controller+repair+soldering+iron" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=controller+repair+soldering+iron+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
 </div>
 
 <div class="search-row">
   <div class="question">how to remove joystick module</div>
-  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=%22how+to+remove+joystick+module%22&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=%22how+to+remove+joystick+module%22&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=%22how+to+remove+joystick+module%22" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=%22how+to+remove+joystick+module%22+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
+  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=how+to+remove+joystick+module&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=how+to+remove+joystick+module&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=how+to+remove+joystick+module" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=how+to+remove+joystick+module+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
 </div>
 
 <div class="search-row">
   <div class="question">microsoldering tools beginner</div>
-  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=%22microsoldering+tools+beginner%22&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=%22microsoldering+tools+beginner%22&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=%22microsoldering+tools+beginner%22" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=%22microsoldering+tools+beginner%22+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
+  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=microsoldering+tools+beginner&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=microsoldering+tools+beginner&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=microsoldering+tools+beginner" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=microsoldering+tools+beginner+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
 </div>
 
 <div class="search-row">
   <div class="question">soldering iron tip for controller repair</div>
-  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=%22soldering+iron+tip+for+controller+repair%22&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=%22soldering+iron+tip+for+controller+repair%22&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=%22soldering+iron+tip+for+controller+repair%22" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=%22soldering+iron+tip+for+controller+repair%22+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
+  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=soldering+iron+tip+for+controller+repair&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=soldering+iron+tip+for+controller+repair&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=soldering+iron+tip+for+controller+repair" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=soldering+iron+tip+for+controller+repair+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
 </div>
 
 <div class="search-row">
   <div class="question">c245 tips controller repair</div>
-  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=%22c245+tips+controller+repair%22&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=%22c245+tips+controller+repair%22&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=%22c245+tips+controller+repair%22" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=%22c245+tips+controller+repair%22+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
+  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=c245+tips+controller+repair&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=c245+tips+controller+repair&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=c245+tips+controller+repair" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=c245+tips+controller+repair+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
 </div>
 
 <div class="search-row">
   <div class="question">soldering tip for joystick removal</div>
-  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=%22soldering+tip+for+joystick+removal%22&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=%22soldering+tip+for+joystick+removal%22&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=%22soldering+tip+for+joystick+removal%22" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=%22soldering+tip+for+joystick+removal%22+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
+  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=soldering+tip+for+joystick+removal&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=soldering+tip+for+joystick+removal&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=soldering+tip+for+joystick+removal" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=soldering+tip+for+joystick+removal+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
 </div>
 
 <div class="search-row">
   <div class="question">heat set insert tip</div>
-  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=%22heat+set+insert+tip%22&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=%22heat+set+insert+tip%22&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=%22heat+set+insert+tip%22" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=%22heat+set+insert+tip%22+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
+  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=heat+set+insert+tip&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=heat+set+insert+tip&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=heat+set+insert+tip" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=heat+set+insert+tip+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
 </div></div>
   <h3>Simple reply draft</h3>
   <pre>If you&#x27;re comparing options, this one is worth checking: C245 Soldering Tips Heat Set Insert Tool for M2/M2.5/M3/M4/M5/M6/M8 Threaded Inserts. I saved it because This heats up pretty fast. Specs + link here: https://demmey.github.io/gearpick/c245-soldering-tips-heat-set-insert-tool-for-m2-m2-5-m3-m4-m.html #ad</pre>
+  <h3>Reddit/forums markdown draft</h3>
+  <pre>If you&#x27;re comparing options, [C245 Soldering Tips Heat Set Insert Tool for M2/M2.5/M3/M4/M5/M6/M8 Thre](https://demmey.github.io/gearpick/c245-soldering-tips-heat-set-insert-tool-for-m2-m2-5-m3-m4-m.html) is worth checking. I saved it because This heats up pretty fast. #ad</pre>
+  <h3>Clickable preview</h3>
+  <div class="rendered-draft">If you're comparing options, <a href="https://demmey.github.io/gearpick/c245-soldering-tips-heat-set-insert-tool-for-m2-m2-5-m3-m4-m.html" target="_blank" rel="noopener">C245 Soldering Tips Heat Set Insert Tool for M2/M2.5/M3/M4/M5/M6/M8 Thre</a> is worth checking. I saved it because This heats up pretty fast. <strong>#ad</strong></div>
   <h3>More natural openers</h3>
   <pre>For best soldering iron for electronics, I would look at C245 Soldering Tips Heat Set Insert Tool for M2/M2.5/M3/M4/M5/M6/M8 Thre. Check compatibility first, but I saved the specs here: https://demmey.github.io/gearpick/c245-soldering-tips-heat-set-insert-tool-for-m2-m2-5-m3-m4-m.html #ad
 For controller repair soldering iron, I would look at C245 Soldering Tips Heat Set Insert Tool for M2/M2.5/M3/M4/M5/M6/M8 Thre. Check compatibility first, but I saved the specs here: https://demmey.github.io/gearpick/c245-soldering-tips-heat-set-insert-tool-for-m2-m2-5-m3-m4-m.html #ad
 For how to remove joystick module, I would look at C245 Soldering Tips Heat Set Insert Tool for M2/M2.5/M3/M4/M5/M6/M8 Thre. Check compatibility first, but I saved the specs here: https://demmey.github.io/gearpick/c245-soldering-tips-heat-set-insert-tool-for-m2-m2-5-m3-m4-m.html #ad</pre>
+  <h3>Markdown openers</h3>
+  <pre>For best soldering iron for electronics, I would look at [C245 Soldering Tips Heat Set Insert Tool for M2/M2.5/M3/M4/M5/M6/M8 Thre](https://demmey.github.io/gearpick/c245-soldering-tips-heat-set-insert-tool-for-m2-m2-5-m3-m4-m.html). Check compatibility first. #ad
+For controller repair soldering iron, I would look at [C245 Soldering Tips Heat Set Insert Tool for M2/M2.5/M3/M4/M5/M6/M8 Thre](https://demmey.github.io/gearpick/c245-soldering-tips-heat-set-insert-tool-for-m2-m2-5-m3-m4-m.html). Check compatibility first. #ad
+For how to remove joystick module, I would look at [C245 Soldering Tips Heat Set Insert Tool for M2/M2.5/M3/M4/M5/M6/M8 Thre](https://demmey.github.io/gearpick/c245-soldering-tips-heat-set-insert-tool-for-m2-m2-5-m3-m4-m.html). Check compatibility first. #ad</pre>
+  <h3>Clickable opener preview</h3>
+  <div class="rendered-draft"><p>For best soldering iron for electronics, I would look at <a href="https://demmey.github.io/gearpick/c245-soldering-tips-heat-set-insert-tool-for-m2-m2-5-m3-m4-m.html" target="_blank" rel="noopener">C245 Soldering Tips Heat Set Insert Tool for M2/M2.5/M3/M4/M5/M6/M8 Thre</a>. Check compatibility first. <strong>#ad</strong></p><p>For controller repair soldering iron, I would look at <a href="https://demmey.github.io/gearpick/c245-soldering-tips-heat-set-insert-tool-for-m2-m2-5-m3-m4-m.html" target="_blank" rel="noopener">C245 Soldering Tips Heat Set Insert Tool for M2/M2.5/M3/M4/M5/M6/M8 Thre</a>. Check compatibility first. <strong>#ad</strong></p><p>For how to remove joystick module, I would look at <a href="https://demmey.github.io/gearpick/c245-soldering-tips-heat-set-insert-tool-for-m2-m2-5-m3-m4-m.html" target="_blank" rel="noopener">C245 Soldering Tips Heat Set Insert Tool for M2/M2.5/M3/M4/M5/M6/M8 Thre</a>. Check compatibility first. <strong>#ad</strong></p></div>
   <h3>Post on your own account</h3>
   <pre>Added a new GearPick: C245 Soldering Tips Heat Set Insert Tool for M2/M2.5/M3/M4/M5/M6/M8 Threaded Inserts
 
@@ -327,8 +474,8 @@ Why I saved it: This heats up pretty fast
 Current price I saw: $9.99\nSpecs + Amazon link: https://demmey.github.io/gearpick/c245-soldering-tips-heat-set-insert-tool-for-m2-m2-5-m3-m4-m.html
 
 #ad</pre>
-</article>
-<article class="card">
+</section>
+<section class="detail-panel" id="product-5">
   <div class="meta">tech / budget / $18.99</div>
   <h2>Soldering Iron Tip for PS5 Switch Joystick Repair with C245HS 02A Connector for Game Controller DIY and Professional Electronics Repair(B)</h2>
   <p>Easier to remove using this tool</p>
@@ -339,49 +486,59 @@ Current price I saw: $9.99\nSpecs + Amazon link: https://demmey.github.io/gearpi
   <div class="search-table">
 <div class="search-row">
   <div class="question">stick drift fix</div>
-  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=%22stick+drift+fix%22&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=%22stick+drift+fix%22&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=%22stick+drift+fix%22" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=%22stick+drift+fix%22+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
+  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=stick+drift+fix&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=stick+drift+fix&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=stick+drift+fix" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=stick+drift+fix+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
 </div>
 
 <div class="search-row">
   <div class="question">ps5 controller drift</div>
-  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=%22ps5+controller+drift%22&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=%22ps5+controller+drift%22&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=%22ps5+controller+drift%22" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=%22ps5+controller+drift%22+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
+  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=ps5+controller+drift&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=ps5+controller+drift&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=ps5+controller+drift" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=ps5+controller+drift+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
 </div>
 
 <div class="search-row">
   <div class="question">dualsense analog stick replacement</div>
-  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=%22dualsense+analog+stick+replacement%22&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=%22dualsense+analog+stick+replacement%22&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=%22dualsense+analog+stick+replacement%22" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=%22dualsense+analog+stick+replacement%22+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
+  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=dualsense+analog+stick+replacement&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=dualsense+analog+stick+replacement&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=dualsense+analog+stick+replacement" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=dualsense+analog+stick+replacement+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
 </div>
 
 <div class="search-row">
   <div class="question">best replacement thumbsticks</div>
-  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=%22best+replacement+thumbsticks%22&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=%22best+replacement+thumbsticks%22&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=%22best+replacement+thumbsticks%22" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=%22best+replacement+thumbsticks%22+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
+  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=best+replacement+thumbsticks&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=best+replacement+thumbsticks&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=best+replacement+thumbsticks" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=best+replacement+thumbsticks+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
 </div>
 
 <div class="search-row">
   <div class="question">hall effect vs tmr joystick</div>
-  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=%22hall+effect+vs+tmr+joystick%22&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=%22hall+effect+vs+tmr+joystick%22&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=%22hall+effect+vs+tmr+joystick%22" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=%22hall+effect+vs+tmr+joystick%22+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
+  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=hall+effect+vs+tmr+joystick&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=hall+effect+vs+tmr+joystick&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=hall+effect+vs+tmr+joystick" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=hall+effect+vs+tmr+joystick+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
 </div>
 
 <div class="search-row">
   <div class="question">controller joystick repair</div>
-  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=%22controller+joystick+repair%22&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=%22controller+joystick+repair%22&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=%22controller+joystick+repair%22" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=%22controller+joystick+repair%22+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
+  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=controller+joystick+repair&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=controller+joystick+repair&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=controller+joystick+repair" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=controller+joystick+repair+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
 </div>
 
 <div class="search-row">
   <div class="question">analog stick feels loose</div>
-  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=%22analog+stick+feels+loose%22&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=%22analog+stick+feels+loose%22&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=%22analog+stick+feels+loose%22" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=%22analog+stick+feels+loose%22+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
+  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=analog+stick+feels+loose&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=analog+stick+feels+loose&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=analog+stick+feels+loose" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=analog+stick+feels+loose+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
 </div>
 
 <div class="search-row">
   <div class="question">controller repair</div>
-  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=%22controller+repair%22&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=%22controller+repair%22&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=%22controller+repair%22" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=%22controller+repair%22+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
+  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=controller+repair&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=controller+repair&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=controller+repair" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=controller+repair+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
 </div></div>
   <h3>Simple reply draft</h3>
   <pre>If you&#x27;re comparing options, this one is worth checking: Soldering Iron Tip for PS5 Switch Joystick Repair with C245HS 02A Connector for Game. I saved it because Easier to remove using this tool. Specs + link here: https://demmey.github.io/gearpick/soldering-iron-tip-for-ps5-switch-joystick-repair-with-c245h.html #ad</pre>
+  <h3>Reddit/forums markdown draft</h3>
+  <pre>If you&#x27;re comparing options, [Soldering Iron Tip for PS5 Switch Joystick Repair with C245HS 02A Connec](https://demmey.github.io/gearpick/soldering-iron-tip-for-ps5-switch-joystick-repair-with-c245h.html) is worth checking. I saved it because Easier to remove using this tool. #ad</pre>
+  <h3>Clickable preview</h3>
+  <div class="rendered-draft">If you're comparing options, <a href="https://demmey.github.io/gearpick/soldering-iron-tip-for-ps5-switch-joystick-repair-with-c245h.html" target="_blank" rel="noopener">Soldering Iron Tip for PS5 Switch Joystick Repair with C245HS 02A Connec</a> is worth checking. I saved it because Easier to remove using this tool. <strong>#ad</strong></div>
   <h3>More natural openers</h3>
   <pre>For stick drift fix, I would look at Soldering Iron Tip for PS5 Switch Joystick Repair with C245HS 02A Connec. Check compatibility first, but I saved the specs here: https://demmey.github.io/gearpick/soldering-iron-tip-for-ps5-switch-joystick-repair-with-c245h.html #ad
 For ps5 controller drift, I would look at Soldering Iron Tip for PS5 Switch Joystick Repair with C245HS 02A Connec. Check compatibility first, but I saved the specs here: https://demmey.github.io/gearpick/soldering-iron-tip-for-ps5-switch-joystick-repair-with-c245h.html #ad
 For dualsense analog stick replacement, I would look at Soldering Iron Tip for PS5 Switch Joystick Repair with C245HS 02A Connec. Check compatibility first, but I saved the specs here: https://demmey.github.io/gearpick/soldering-iron-tip-for-ps5-switch-joystick-repair-with-c245h.html #ad</pre>
+  <h3>Markdown openers</h3>
+  <pre>For stick drift fix, I would look at [Soldering Iron Tip for PS5 Switch Joystick Repair with C245HS 02A Connec](https://demmey.github.io/gearpick/soldering-iron-tip-for-ps5-switch-joystick-repair-with-c245h.html). Check compatibility first. #ad
+For ps5 controller drift, I would look at [Soldering Iron Tip for PS5 Switch Joystick Repair with C245HS 02A Connec](https://demmey.github.io/gearpick/soldering-iron-tip-for-ps5-switch-joystick-repair-with-c245h.html). Check compatibility first. #ad
+For dualsense analog stick replacement, I would look at [Soldering Iron Tip for PS5 Switch Joystick Repair with C245HS 02A Connec](https://demmey.github.io/gearpick/soldering-iron-tip-for-ps5-switch-joystick-repair-with-c245h.html). Check compatibility first. #ad</pre>
+  <h3>Clickable opener preview</h3>
+  <div class="rendered-draft"><p>For stick drift fix, I would look at <a href="https://demmey.github.io/gearpick/soldering-iron-tip-for-ps5-switch-joystick-repair-with-c245h.html" target="_blank" rel="noopener">Soldering Iron Tip for PS5 Switch Joystick Repair with C245HS 02A Connec</a>. Check compatibility first. <strong>#ad</strong></p><p>For ps5 controller drift, I would look at <a href="https://demmey.github.io/gearpick/soldering-iron-tip-for-ps5-switch-joystick-repair-with-c245h.html" target="_blank" rel="noopener">Soldering Iron Tip for PS5 Switch Joystick Repair with C245HS 02A Connec</a>. Check compatibility first. <strong>#ad</strong></p><p>For dualsense analog stick replacement, I would look at <a href="https://demmey.github.io/gearpick/soldering-iron-tip-for-ps5-switch-joystick-repair-with-c245h.html" target="_blank" rel="noopener">Soldering Iron Tip for PS5 Switch Joystick Repair with C245HS 02A Connec</a>. Check compatibility first. <strong>#ad</strong></p></div>
   <h3>Post on your own account</h3>
   <pre>Added a new GearPick: Soldering Iron Tip for PS5 Switch Joystick Repair with C245HS 02A Connector for Game Control
 
@@ -389,8 +546,8 @@ Why I saved it: Easier to remove using this tool
 Current price I saw: $18.99\nSpecs + Amazon link: https://demmey.github.io/gearpick/soldering-iron-tip-for-ps5-switch-joystick-repair-with-c245h.html
 
 #ad</pre>
-</article>
-<article class="card">
+</section>
+<section class="detail-panel" id="product-6">
   <div class="meta">tech / premium / </div>
   <h2>Apple 2026 MacBook Neo 13-inch Laptop with A18 Pro chip: Built for AI and Apple Intelligence, Liquid Retina Display, 8GB Unified Memory, 512GB SSD Storage, 1080p FaceTime HD Camera, Touch ID; Silver</h2>
   <p>it’s an amazing Mac at a surprising price. Gets the jod done.</p>
@@ -401,10 +558,20 @@ Current price I saw: $18.99\nSpecs + Amazon link: https://demmey.github.io/gearp
   <div class="search-table"><p class="empty">Add buyer problem phrases when importing this product.</p></div>
   <h3>Simple reply draft</h3>
   <pre>If you&#x27;re comparing options, this one is worth checking: Apple 2026 MacBook Neo 13-inch Laptop with A18 Pro chip: Built for AI and Apple Inte. I saved it because it’s an amazing Mac at a surprising price. Gets the jod done.. Specs + link here: https://demmey.github.io/gearpick/apple-2026-macbook-neo-13-inch-laptop-with-a18-pro-chip-buil.html #ad</pre>
+  <h3>Reddit/forums markdown draft</h3>
+  <pre>If you&#x27;re comparing options, [Apple 2026 MacBook Neo 13-inch Laptop with A18 Pro chip: Built for AI an](https://demmey.github.io/gearpick/apple-2026-macbook-neo-13-inch-laptop-with-a18-pro-chip-buil.html) is worth checking. I saved it because it’s an amazing Mac at a surprising price. Gets the jod done.. #ad</pre>
+  <h3>Clickable preview</h3>
+  <div class="rendered-draft">If you're comparing options, <a href="https://demmey.github.io/gearpick/apple-2026-macbook-neo-13-inch-laptop-with-a18-pro-chip-buil.html" target="_blank" rel="noopener">Apple 2026 MacBook Neo 13-inch Laptop with A18 Pro chip: Built for AI an</a> is worth checking. I saved it because it’s an amazing Mac at a surprising price. Gets the jod done.. <strong>#ad</strong></div>
   <h3>More natural openers</h3>
   <pre>For that upgrade, I would look at Apple 2026 MacBook Neo 13-inch Laptop with A18 Pro chip: Built for AI an. Check compatibility first, but I saved the specs here: https://demmey.github.io/gearpick/apple-2026-macbook-neo-13-inch-laptop-with-a18-pro-chip-buil.html #ad
 For that repair, I would look at Apple 2026 MacBook Neo 13-inch Laptop with A18 Pro chip: Built for AI an. Check compatibility first, but I saved the specs here: https://demmey.github.io/gearpick/apple-2026-macbook-neo-13-inch-laptop-with-a18-pro-chip-buil.html #ad
 For that setup, I would look at Apple 2026 MacBook Neo 13-inch Laptop with A18 Pro chip: Built for AI an. Check compatibility first, but I saved the specs here: https://demmey.github.io/gearpick/apple-2026-macbook-neo-13-inch-laptop-with-a18-pro-chip-buil.html #ad</pre>
+  <h3>Markdown openers</h3>
+  <pre>For that upgrade, I would look at [Apple 2026 MacBook Neo 13-inch Laptop with A18 Pro chip: Built for AI an](https://demmey.github.io/gearpick/apple-2026-macbook-neo-13-inch-laptop-with-a18-pro-chip-buil.html). Check compatibility first. #ad
+For that repair, I would look at [Apple 2026 MacBook Neo 13-inch Laptop with A18 Pro chip: Built for AI an](https://demmey.github.io/gearpick/apple-2026-macbook-neo-13-inch-laptop-with-a18-pro-chip-buil.html). Check compatibility first. #ad
+For that setup, I would look at [Apple 2026 MacBook Neo 13-inch Laptop with A18 Pro chip: Built for AI an](https://demmey.github.io/gearpick/apple-2026-macbook-neo-13-inch-laptop-with-a18-pro-chip-buil.html). Check compatibility first. #ad</pre>
+  <h3>Clickable opener preview</h3>
+  <div class="rendered-draft"><p>For that upgrade, I would look at <a href="https://demmey.github.io/gearpick/apple-2026-macbook-neo-13-inch-laptop-with-a18-pro-chip-buil.html" target="_blank" rel="noopener">Apple 2026 MacBook Neo 13-inch Laptop with A18 Pro chip: Built for AI an</a>. Check compatibility first. <strong>#ad</strong></p><p>For that repair, I would look at <a href="https://demmey.github.io/gearpick/apple-2026-macbook-neo-13-inch-laptop-with-a18-pro-chip-buil.html" target="_blank" rel="noopener">Apple 2026 MacBook Neo 13-inch Laptop with A18 Pro chip: Built for AI an</a>. Check compatibility first. <strong>#ad</strong></p><p>For that setup, I would look at <a href="https://demmey.github.io/gearpick/apple-2026-macbook-neo-13-inch-laptop-with-a18-pro-chip-buil.html" target="_blank" rel="noopener">Apple 2026 MacBook Neo 13-inch Laptop with A18 Pro chip: Built for AI an</a>. Check compatibility first. <strong>#ad</strong></p></div>
   <h3>Post on your own account</h3>
   <pre>Added a new GearPick: Apple 2026 MacBook Neo 13-inch Laptop with A18 Pro chip: Built for AI and Apple Intelligence
 
@@ -412,8 +579,8 @@ Why I saved it: it’s an amazing Mac at a surprising price. Gets the jod done.
 Specs + Amazon link: https://demmey.github.io/gearpick/apple-2026-macbook-neo-13-inch-laptop-with-a18-pro-chip-buil.html
 
 #ad</pre>
-</article>
-<article class="card">
+</section>
+<section class="detail-panel" id="product-7">
   <div class="meta">tech / budget / $59.99</div>
   <h2>FNIRSI HS-01 Digital Soldering Iron Kit, DC/PD 96W/65W Fast Heating, 180-780℉ Adjustable Temperature, OLED Digital Display, Auto Sleep Function, 6 Soldering Tips, for Precision Electronics Repair</h2>
   <p>Compatible with JBC Station, Fast Heating for 3D Printing</p>
@@ -424,49 +591,59 @@ Specs + Amazon link: https://demmey.github.io/gearpick/apple-2026-macbook-neo-13
   <div class="search-table">
 <div class="search-row">
   <div class="question">best soldering iron for electronics</div>
-  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=%22best+soldering+iron+for+electronics%22&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=%22best+soldering+iron+for+electronics%22&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=%22best+soldering+iron+for+electronics%22" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=%22best+soldering+iron+for+electronics%22+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
+  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=best+soldering+iron+for+electronics&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=best+soldering+iron+for+electronics&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=best+soldering+iron+for+electronics" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=best+soldering+iron+for+electronics+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
 </div>
 
 <div class="search-row">
   <div class="question">controller repair soldering iron</div>
-  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=%22controller+repair+soldering+iron%22&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=%22controller+repair+soldering+iron%22&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=%22controller+repair+soldering+iron%22" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=%22controller+repair+soldering+iron%22+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
+  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=controller+repair+soldering+iron&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=controller+repair+soldering+iron&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=controller+repair+soldering+iron" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=controller+repair+soldering+iron+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
 </div>
 
 <div class="search-row">
   <div class="question">how to remove joystick module</div>
-  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=%22how+to+remove+joystick+module%22&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=%22how+to+remove+joystick+module%22&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=%22how+to+remove+joystick+module%22" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=%22how+to+remove+joystick+module%22+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
+  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=how+to+remove+joystick+module&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=how+to+remove+joystick+module&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=how+to+remove+joystick+module" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=how+to+remove+joystick+module+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
 </div>
 
 <div class="search-row">
   <div class="question">microsoldering tools beginner</div>
-  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=%22microsoldering+tools+beginner%22&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=%22microsoldering+tools+beginner%22&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=%22microsoldering+tools+beginner%22" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=%22microsoldering+tools+beginner%22+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
+  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=microsoldering+tools+beginner&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=microsoldering+tools+beginner&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=microsoldering+tools+beginner" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=microsoldering+tools+beginner+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
 </div>
 
 <div class="search-row">
   <div class="question">soldering iron tip for controller repair</div>
-  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=%22soldering+iron+tip+for+controller+repair%22&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=%22soldering+iron+tip+for+controller+repair%22&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=%22soldering+iron+tip+for+controller+repair%22" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=%22soldering+iron+tip+for+controller+repair%22+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
+  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=soldering+iron+tip+for+controller+repair&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=soldering+iron+tip+for+controller+repair&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=soldering+iron+tip+for+controller+repair" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=soldering+iron+tip+for+controller+repair+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
 </div>
 
 <div class="search-row">
   <div class="question">c245 tips controller repair</div>
-  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=%22c245+tips+controller+repair%22&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=%22c245+tips+controller+repair%22&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=%22c245+tips+controller+repair%22" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=%22c245+tips+controller+repair%22+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
+  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=c245+tips+controller+repair&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=c245+tips+controller+repair&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=c245+tips+controller+repair" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=c245+tips+controller+repair+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
 </div>
 
 <div class="search-row">
   <div class="question">soldering tip for joystick removal</div>
-  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=%22soldering+tip+for+joystick+removal%22&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=%22soldering+tip+for+joystick+removal%22&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=%22soldering+tip+for+joystick+removal%22" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=%22soldering+tip+for+joystick+removal%22+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
+  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=soldering+tip+for+joystick+removal&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=soldering+tip+for+joystick+removal&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=soldering+tip+for+joystick+removal" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=soldering+tip+for+joystick+removal+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
 </div>
 
 <div class="search-row">
   <div class="question">heat set insert tip</div>
-  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=%22heat+set+insert+tip%22&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=%22heat+set+insert+tip%22&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=%22heat+set+insert+tip%22" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=%22heat+set+insert+tip%22+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
+  <div class="search-buttons"><a class="mini-link" href="https://www.reddit.com/search/?q=heat+set+insert+tip&amp;sort=new" target="_blank" rel="noopener">Reddit</a><a class="mini-link" href="https://x.com/search?q=heat+set+insert+tip&amp;src=typed_query&amp;f=live" target="_blank" rel="noopener">X</a><a class="mini-link" href="https://bsky.app/search?q=heat+set+insert+tip" target="_blank" rel="noopener">Bluesky</a><a class="mini-link" href="https://www.google.com/search?q=heat+set+insert+tip+site%3Areddit.com+OR+site%3Alinustechtips.com+OR+site%3Atomshardware.com" target="_blank" rel="noopener">Google/forums</a></div>
 </div></div>
   <h3>Simple reply draft</h3>
   <pre>If you&#x27;re comparing options, this one is worth checking: FNIRSI HS-01 Digital Soldering Iron Kit. I saved it because Compatible with JBC Station, Fast Heating for 3D Printing. Specs + link here: https://demmey.github.io/gearpick/fnirsi-hs-01-digital-soldering-iron-kit-dc-pd-96w-65w-fast-h.html #ad</pre>
+  <h3>Reddit/forums markdown draft</h3>
+  <pre>If you&#x27;re comparing options, [FNIRSI HS-01 Digital Soldering Iron Kit](https://demmey.github.io/gearpick/fnirsi-hs-01-digital-soldering-iron-kit-dc-pd-96w-65w-fast-h.html) is worth checking. I saved it because Compatible with JBC Station, Fast Heating for 3D Printing. #ad</pre>
+  <h3>Clickable preview</h3>
+  <div class="rendered-draft">If you're comparing options, <a href="https://demmey.github.io/gearpick/fnirsi-hs-01-digital-soldering-iron-kit-dc-pd-96w-65w-fast-h.html" target="_blank" rel="noopener">FNIRSI HS-01 Digital Soldering Iron Kit</a> is worth checking. I saved it because Compatible with JBC Station, Fast Heating for 3D Printing. <strong>#ad</strong></div>
   <h3>More natural openers</h3>
   <pre>For best soldering iron for electronics, I would look at FNIRSI HS-01 Digital Soldering Iron Kit. Check compatibility first, but I saved the specs here: https://demmey.github.io/gearpick/fnirsi-hs-01-digital-soldering-iron-kit-dc-pd-96w-65w-fast-h.html #ad
 For controller repair soldering iron, I would look at FNIRSI HS-01 Digital Soldering Iron Kit. Check compatibility first, but I saved the specs here: https://demmey.github.io/gearpick/fnirsi-hs-01-digital-soldering-iron-kit-dc-pd-96w-65w-fast-h.html #ad
 For how to remove joystick module, I would look at FNIRSI HS-01 Digital Soldering Iron Kit. Check compatibility first, but I saved the specs here: https://demmey.github.io/gearpick/fnirsi-hs-01-digital-soldering-iron-kit-dc-pd-96w-65w-fast-h.html #ad</pre>
+  <h3>Markdown openers</h3>
+  <pre>For best soldering iron for electronics, I would look at [FNIRSI HS-01 Digital Soldering Iron Kit](https://demmey.github.io/gearpick/fnirsi-hs-01-digital-soldering-iron-kit-dc-pd-96w-65w-fast-h.html). Check compatibility first. #ad
+For controller repair soldering iron, I would look at [FNIRSI HS-01 Digital Soldering Iron Kit](https://demmey.github.io/gearpick/fnirsi-hs-01-digital-soldering-iron-kit-dc-pd-96w-65w-fast-h.html). Check compatibility first. #ad
+For how to remove joystick module, I would look at [FNIRSI HS-01 Digital Soldering Iron Kit](https://demmey.github.io/gearpick/fnirsi-hs-01-digital-soldering-iron-kit-dc-pd-96w-65w-fast-h.html). Check compatibility first. #ad</pre>
+  <h3>Clickable opener preview</h3>
+  <div class="rendered-draft"><p>For best soldering iron for electronics, I would look at <a href="https://demmey.github.io/gearpick/fnirsi-hs-01-digital-soldering-iron-kit-dc-pd-96w-65w-fast-h.html" target="_blank" rel="noopener">FNIRSI HS-01 Digital Soldering Iron Kit</a>. Check compatibility first. <strong>#ad</strong></p><p>For controller repair soldering iron, I would look at <a href="https://demmey.github.io/gearpick/fnirsi-hs-01-digital-soldering-iron-kit-dc-pd-96w-65w-fast-h.html" target="_blank" rel="noopener">FNIRSI HS-01 Digital Soldering Iron Kit</a>. Check compatibility first. <strong>#ad</strong></p><p>For how to remove joystick module, I would look at <a href="https://demmey.github.io/gearpick/fnirsi-hs-01-digital-soldering-iron-kit-dc-pd-96w-65w-fast-h.html" target="_blank" rel="noopener">FNIRSI HS-01 Digital Soldering Iron Kit</a>. Check compatibility first. <strong>#ad</strong></p></div>
   <h3>Post on your own account</h3>
   <pre>Added a new GearPick: FNIRSI HS-01 Digital Soldering Iron Kit
 
@@ -474,6 +651,47 @@ Why I saved it: Compatible with JBC Station, Fast Heating for 3D Printing
 Current price I saw: $59.99\nSpecs + Amazon link: https://demmey.github.io/gearpick/fnirsi-hs-01-digital-soldering-iron-kit-dc-pd-96w-65w-fast-h.html
 
 #ad</pre>
-</article>
+</section>
+    </div>
+  </div>
+</main>
+<script>
+const tiles = [...document.querySelectorAll('.product-tile')];
+const panels = [...document.querySelectorAll('.detail-panel')];
+const search = document.getElementById('productSearch');
+const count = document.getElementById('count');
+const noResults = document.getElementById('noResults');
+
+function showPanel(id) {
+  tiles.forEach(tile => tile.classList.toggle('active', tile.dataset.panel === id));
+  panels.forEach(panel => panel.classList.toggle('active', panel.id === id));
+  noResults.classList.remove('show');
+}
+
+function applySearch() {
+  const query = search.value.trim().toLowerCase();
+  let visible = 0;
+  let firstVisible = null;
+  tiles.forEach(tile => {
+    const ok = !query || tile.dataset.search.includes(query);
+    tile.style.display = ok ? 'grid' : 'none';
+    if (ok) {
+      visible++;
+      firstVisible ||= tile;
+    }
+  });
+  count.textContent = visible + (visible === 1 ? ' product' : ' products');
+  noResults.classList.toggle('show', visible === 0);
+  if (firstVisible && !firstVisible.classList.contains('active')) {
+    showPanel(firstVisible.dataset.panel);
+  }
+  if (!visible) {
+    panels.forEach(panel => panel.classList.remove('active'));
+  }
+}
+
+tiles.forEach(tile => tile.addEventListener('click', () => showPanel(tile.dataset.panel)));
+search.addEventListener('input', applySearch);
+</script>
 </body>
 </html>
